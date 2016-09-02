@@ -100,5 +100,27 @@ class AdminController extends Zend_Controller_Action {
             }
         }
     }
+    
+    public function proctypemanageAction(){
+        if ($this->PWDSession->session_data['user_type_id'] == 1) {
+            $this->view->proclist = $this->admin->getProcList();
+            $getdata = $this->_request->getQuery();
+            $postdata = $this->_request->getPost();
+
+            if ($postdata) {
+                $status = $this->admin->createUpdateProcType($postdata);
+                if ($status['o_status_code'] == 1)
+                    $this->flashMessenger->addMessage(array('alert-success' => $status['o_status_message']));
+                else
+                    $this->flashMessenger->addMessage(array('alert-danger' => $status['o_status_message']));
+                $this->_redirect('Admin/proctypemanage');
+            }
+
+            if ($getdata['id']) {
+                $proc_id = $getdata['id'];
+                $this->view->procdata = $this->admin->getProcType($proc_id);
+            }
+        }
+    }
 
 }

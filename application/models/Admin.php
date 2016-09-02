@@ -127,8 +127,7 @@ class Application_Model_Admin extends Zend_Db_Table {
                 SECTOR_NAME,
                 ENABLE_YN,
                 CREATE_DATE
-           FROM L_SECTOR
-          WHERE ENABLE_YN = 'Y' ORDER BY SECTOR_ID";
+           FROM L_SECTOR ORDER BY SECTOR_ID";
         $data = $this->_db->fetchAll($sql);
         return $data;
     }
@@ -144,4 +143,48 @@ class Application_Model_Admin extends Zend_Db_Table {
         return $data;
     }
 
+    public function getProcList(){
+        $sql = "SELECT PROC_ID,
+                PROC_TYPE_NAME,
+                ENABLE_YN,
+                CREATE_DATE
+           FROM L_PROCUREMENT_TYPE ORDER BY PROC_ID";
+        $data = $this->_db->fetchAll($sql);
+        return $data;
+    }
+    
+    public function createUpdateProcType($data){
+        $o_status_code = sprintf('%20f', '');
+        $o_status_message = sprintf('%4000s', '');
+
+        $out_parms = array(
+            "o_status_code" => &$o_status_code,
+            "o_status_message" => &$o_status_message
+        );
+
+        $all_data = array_merge($data, $out_parms);
+        //print_r ($all_data);exit();
+
+        $this->_db->query("BEGIN CREATE_OR_UPDATE_PROC_TYPE(
+           :p_proc_id,
+           :p_proc_type,
+           :p_proc_type_yn,
+           :o_status_code,
+           :o_status_message); END;", $all_data);
+
+        //print_r ($all_data);exit();
+        return $all_data;
+    }
+    
+    public function getProcType($proc_id){
+        $sql = "SELECT PROC_ID,
+                PROC_TYPE_NAME,
+                ENABLE_YN,
+                CREATE_DATE
+           FROM L_PROCUREMENT_TYPE
+          WHERE PROC_ID = '$proc_id'";
+        $data = $this->_db->fetchRow($sql);
+        //print_r($data);exit;
+        return $data;
+    }
 }
