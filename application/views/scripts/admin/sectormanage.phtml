@@ -1,0 +1,121 @@
+<div class="row" style="min-height: 560px">
+    <div class="col-md-1 col-sm-1 col-xs-1"></div>
+    <div class="col-md-10 col-sm-10 col-xs-10" style="padding-top: 30px" >
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Create New Sector</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                    <li><a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <form class="form-horizontal form-label-left" novalidate autocomplete="off" action="<?= $this->baseUrl() ?>/Admin/sectormanage" method="post">
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Sector Name <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input class="form-control col-md-7 col-xs-12" <?php if ($this->sectordata['SECTOR_NAME']) { ?>value="<?= $this->sectordata['SECTOR_NAME'] ?>"<?php } ?>  name="p_sector_name" placeholder="Enter Sector Name" required="required" type="text">
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Sector Enable
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select class="select2_single form-control" tabindex="-1" required="required" name="p_sector_enable">
+                                <option value="Y" <?php if ($this->sectordata['ENABLE_YN'] == 'Y') echo "selected"; ?>>YES</option>
+                                <option value="N" <?php if ($this->sectordata['ENABLE_YN'] == 'N') echo "selected"; ?>>NO</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="ln_solid"></div>
+                    <div class="form-group">
+                        <div class="col-md-6 col-md-offset-3">
+                            <a href="index" class="btn btn-primary">Cancel</a>
+                            <button  type="submit" name="submit" value="submit" class="btn btn-success">Submit</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-10 col-sm-10 col-xs-10 col-md-offset-1 col-sm-offset-1 col-xs-offset-1" >
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Sector List </h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li><a href="#"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+
+                    <li><a href="#"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="x_content">
+                <form method="get" action="<?= $this->baseUrl() ?>/admin/sectormanage">
+                    <table id="datatable" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Sector ID</th>
+                                <th>Sector Name</th>
+                                <th>Create Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+
+                        <tbody>
+                            <?php
+                            foreach ($this->sectorlist as $sector) {
+                                ?>
+                            
+                            <tr <?php if ($sector['ENABLE_YN'] == 'N') { ?>bgcolor="gray"<?php } ?>>
+                                <td><?= $sector['SECTOR_ID'] ?></td>
+                                <td><?= $sector['SECTOR_NAME'] ?></td>
+                                <td><?= $sector['CREATE_DATE'] ?></td>
+                                <td><a href="sectormanage?id=<?= $sector['SECTOR_ID'] ?>" class="btn btn-success">Update</a></td>
+                            </tr>
+
+                        <?php } ?>
+
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!-- select2 -->
+<script>
+    $(document).ready(function () {
+        $(".select2_single").select2({
+            placeholder: "Select a User Type",
+            allowClear: true
+        });
+        $(".select2_group").select2({});
+        $(".select2_multiple").select2({
+            maximumSelectionLength: 4,
+            placeholder: "With Max Selection limit 4",
+            allowClear: true
+        });
+    });
+</script>
+<!-- /select2 -->
+
+

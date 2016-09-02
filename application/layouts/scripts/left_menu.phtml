@@ -1,0 +1,142 @@
+<?php
+$active_m_menu = Zend_Registry::get('ACTIVE_M_MENU');
+$active_s_menu = Zend_Registry::get('ACTIVE_S_MENU');
+$user_name = Zend_Registry::get('USER_NAME');
+$user_type_id = Zend_Registry::get('USER_TYPE_ID');
+$user_id = Zend_Registry::get('USER_ID');
+?> 
+
+<div class="col-md-3 left_col">
+    <div class="left_col scroll-view">
+
+        <div class="navbar nav_title" style="border: 0;">
+            <?php if ($user_type_id == 1) { ?>
+                <a href="<?= $this->baseUrl(); ?>/Admin/index" class="site_title"> <img height="42" width="42" src="<?php echo $this->baseUrl(); ?>/img/gov_logo_small.png" alt=""><span> Dashboard</span></a>
+            <?php } else if ($user_type_id == 2 or $user_type_id == 3 or $user_type_id == 4) { ?>
+                <a href="<?= $this->baseUrl(); ?>/Staff/index" class="site_title"> <img height="42" width="42" src="<?php echo $this->baseUrl(); ?>/img/gov_logo_small.png" alt=""><span> Dashboard</span></a>
+            <?php } ?>
+        </div>
+        <div class="clearfix"></div>
+
+        <br />
+
+        <!-- sidebar menu -->
+        <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+            <?php if ($user_type_id == 1) { ?>
+                <div class="menu_section">
+
+                    <ul class="nav side-menu">
+                        <li class="<?php
+                        if ($active_m_menu == 'app') {
+                            echo 'current';
+                        }
+                        ?>">
+                            <a><i class="fa fa-user"></i> APP Management <span class="fa fa-chevron-down"></span></a>
+                            <ul class="nav child_menu" style="display: none">
+                                <li class="<?php
+                                if ($active_s_menu == 'sector') {
+                                    echo 'current';
+                                }
+                                ?>"><a href="<?= $this->baseUrl(); ?>/Admin/sectormanage">Sector Management</a>
+                                </li>
+                                <li class="<?php
+                                if ($active_s_menu == 'approve') {
+                                    echo 'current';
+                                }
+                                ?>"><a href="<?= $this->baseUrl(); ?>/Admin/approveauthmanage">Approval Authority Management</a>
+                                </li>
+                                <li class="<?php
+                                if ($active_s_menu == 'proctype') {
+                                    echo 'current';
+                                }
+                                ?>"><a href="<?= $this->baseUrl(); ?>/Admin/proctypemanage">Procurement Nature Management</a>
+                                </li>
+                                <li class="<?php
+                                if ($active_s_menu == 'procmethod') {
+                                    echo 'current';
+                                }
+                                ?>"><a href="<?= $this->baseUrl(); ?>/Admin/procmethodmanage">Procurement Method Management</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a><i class="fa fa-user"></i> Staff Management <span class="fa fa-chevron-down"></span></a>
+                            <ul class="nav child_menu" style="display: none">
+                                <li><a href="<?= $this->baseUrl(); ?>/Admin/createstaff">Create New Staff</a>
+                                </li>
+                                <li><a href="<?= $this->baseUrl(); ?>/Admin/updatestaff">Update Existing Staff</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a><i class="fa fa-user-plus"></i> Contractor Management <span class="fa fa-chevron-down"></span></a>
+                            <ul class="nav child_menu" style="display: none">
+                                <li><a href="<?= $this->baseUrl(); ?>/Admin/createcontractor">Create New Profile</a>
+                                </li>
+                                <li><a href="<?= $this->baseUrl(); ?>/Admin/updatecontractor">Update Existing Profile</a>
+                                </li> 
+                            </ul>
+                        </li>
+                        <li><a><i class="fa fa-edit"></i> Tender Management <span class="fa fa-chevron-down"></span></a>
+                            <ul class="nav child_menu" style="display: none">
+                                <li><a href="#">Create New Tender</a>
+                                </li>
+                                <li><a href="#">Update Existing Tender</a>
+                                </li>
+                            </ul>
+                        </li>
+
+
+                    </ul>
+                </div>
+            <?php } else if ($user_type_id == 2 or $user_type_id == 3) { ?>
+                <ul class="nav side-menu">
+                    <li><a><i class="fa fa-user"></i> APP Fiscal Year <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu" style="display: none">
+                            <li><a href="#">2015-2016</a>
+                            </li>
+                            <li><a href="#">2016-2017</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><a><i class="fa fa-user-plus"></i> DPP Project <span class="fa fa-chevron-down"></span></a>
+
+                    </li>
+                    <li><a><i class="fa fa-user"></i> Health Section <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu" style="display: none">
+                            <li><a href="#">2015-2016</a>
+                            </li>
+                            <li><a href="#">2016-2017</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><a><i class="fa fa-user"></i> Others <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu" style="display: none">
+                            <li><a href="#">2015-2016</a>
+                            </li>
+                            <li><a href="#">2016-2017</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                </ul>
+            <?php } ?>
+        </div>
+        <!-- /sidebar menu -->
+
+        <!-- /menu footer buttons -->
+        <div class="sidebar-footer hidden-small">
+            <a data-toggle="tooltip" data-placement="top" title="Settings">
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+            </a>
+            <a data-toggle="tooltip" data-placement="top" title="FullScreen">
+                <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+            </a>
+            <a data-toggle="tooltip" data-placement="top" title="Lock">
+                <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+            </a>
+            <a data-toggle="tooltip" data-placement="top" title="Logout">
+                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+            </a>
+        </div>
+        <!-- /menu footer buttons -->
+    </div>
+</div>

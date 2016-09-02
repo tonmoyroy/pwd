@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <!-- Meta, title, CSS, favicons, etc. -->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>PWD</title>
+
+        <!-- Bootstrap core CSS -->
+
+        <link href="<?php echo $this->baseUrl(); ?>/css/bootstrap.min.css" rel="stylesheet">
+
+        <link href="<?php echo $this->baseUrl(); ?>/fonts/css/font-awesome.min.css" rel="stylesheet">
+        <link href="<?php echo $this->baseUrl(); ?>/css/animate.min.css" rel="stylesheet">
+
+        <!-- Custom styling plus plugins -->
+        <link href="<?php echo $this->baseUrl(); ?>/css/custom.css" rel="stylesheet">
+        <link href="<?php echo $this->baseUrl(); ?>/css/icheck/flat/green.css" rel="stylesheet">
+
+
+        <script src="js/jquery.min.js"></script>
+
+        <!--[if lt IE 9]>
+              <script src="../assets/js/ie8-responsive-file-warning.js"></script>
+              <![endif]-->
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+                <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+                <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+              <![endif]-->
+
+    </head>
+
+    <body style="background:#F7F7F7;">
+        <div class="page-header" style="margin-top:0px">
+
+            <div class="page-title" >
+                <div class="col-md-2">
+                    
+                </div>
+                <div class="col-md-8">
+                    <div class="col-md-2" style="text-align:right"><img src="<?= $this->baseUrl(); ?>/img/bd.gov.logo.png" alt="logo" style="width: 100px"/></div>
+                    <div class="col-md-8">
+                        <h1 align="center">PWD E/M Division - 7</h1>
+                        <h3 align="center"><b>S. B. Nagar, Dhaka</b></h3>
+                    </div>
+                    
+
+                </div>
+
+                <!--                <div class="col-md-2" style=" text-align: center;padding-left: 0px;padding-right: 0px;padding-top: 40px">
+                                    <a href="http://www.a2i.pmo.gov.bd/"><img src="<?= $this->baseUrl(); ?>/assets/img/logo/a2i_logo.png"  alt="logo" style="width: 50px"/></a>
+                                </div>-->
+            </div>
+        </div>
+        <div class="">
+            <a class="hiddenanchor" id="toregister"></a>
+            <a class="hiddenanchor" id="tologin"></a>
+
+            <?php
+            if (count($this->messages)) :
+                foreach ($this->messages[0] as $key => $message) :
+                    ?>
+                    <div class="row-fluid" style=" max-height: 50px;">
+                        <div class="span2"></div><div class="span6">
+                            <div class="alert <?= $key ?>" style=" padding: 0px 35px 0px 15px; margin-top: 0px; margin-bottom: -3px;">
+                                <button class="close" data-dismiss="alert" type="button">×</button>
+                                <strong><?php echo $this->escape($message); ?></strong>
+                            </div>
+                        </div></div>
+                    <?php
+                endforeach;
+            endif;
+            ?>
+            <?php echo $this->layout()->content; ?>
+        </div>
+
+    </body>
+
+</html>

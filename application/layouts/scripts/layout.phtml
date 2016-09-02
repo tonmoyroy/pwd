@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <!-- Meta, title, CSS, favicons, etc. -->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>PWD E/M Division 7</title>
+
+        <!-- Bootstrap core CSS -->
+
+        <link href="<?php echo $this->baseUrl(); ?>/css/bootstrap.min.css" rel="stylesheet">
+
+        <link href="<?php echo $this->baseUrl(); ?>/fonts/css/font-awesome.min.css" rel="stylesheet">
+        <link href="<?php echo $this->baseUrl(); ?>/css/animate.min.css" rel="stylesheet">
+
+        <!-- Custom styling plus plugins -->
+        <link href="<?php echo $this->baseUrl(); ?>/css/custom.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl(); ?>/css/maps/jquery-jvectormap-2.0.3.css" />
+        <link href="<?php echo $this->baseUrl(); ?>/css/icheck/flat/green.css" rel="stylesheet" />
+        <link href="<?php echo $this->baseUrl(); ?>/css/floatexamples.css" rel="stylesheet" type="text/css" />
+
+        <script src="<?php echo $this->baseUrl(); ?>/js/jquery.min.js"></script>
+        <script src="<?php echo $this->baseUrl(); ?>/js/nprogress.js"></script>
+
+        <!-- select2 -->
+        <link href="<?php echo $this->baseUrl(); ?>/css/select/select2.min.css" rel="stylesheet">
+
+
+        <script src="<?php echo $this->baseUrl(); ?>/js/bootstrap.min.js"></script>
+
+        <!-- gauge js -->
+        <script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/gauge/gauge.min.js"></script>
+        <script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/gauge/gauge_demo.js"></script>
+
+        <!-- bootstrap progress js -->
+        <script src="<?php echo $this->baseUrl(); ?>/js/progressbar/bootstrap-progressbar.min.js"></script>
+        <script src="<?php echo $this->baseUrl(); ?>/js/nicescroll/jquery.nicescroll.min.js"></script>
+
+        <!-- icheck -->
+        <script src="<?php echo $this->baseUrl(); ?>/js/icheck/icheck.min.js"></script>
+
+        <!-- select2 -->
+        <script src="<?php echo $this->baseUrl(); ?>/js/select/select2.full.js"></script>
+
+        <!-- daterangepicker -->
+        <script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/moment/moment.min.js"></script>
+        <script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/datepicker/daterangepicker.js"></script>
+
+        <!-- chart js -->
+        <script src="<?php echo $this->baseUrl(); ?>/js/chartjs/chart.min.js"></script>
+        <script src="<?php echo $this->baseUrl(); ?>/js/custom.js"></script>
+
+        <!-- flot js -->
+        <!--[if lte IE 8]><script type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+        <script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/flot/jquery.flot.js"></script>
+        <script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/flot/jquery.flot.pie.js"></script>
+        <script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/flot/jquery.flot.orderBars.js"></script>
+        <script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/flot/jquery.flot.time.min.js"></script>
+        <script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/flot/date.js"></script>
+        <script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/flot/jquery.flot.spline.js"></script>
+        <script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/flot/jquery.flot.stack.js"></script>
+        <script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/flot/curvedLines.js"></script>
+        <script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/flot/jquery.flot.resize.js"></script>
+
+
+        <!-- worldmap -->
+        <script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/maps/jquery-jvectormap-2.0.3.min.js"></script>
+        <script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/maps/gdp-data.js"></script>
+        <script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/maps/jquery-jvectormap-world-mill-en.js"></script>
+        <script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/maps/jquery-jvectormap-us-aea-en.js"></script>
+        <!-- pace -->
+        <script src="<?php echo $this->baseUrl(); ?>/js/pace/pace.min.js"></script>
+
+        <!-- skycons -->
+        <script src="<?php echo $this->baseUrl(); ?>/js/skycons/skycons.min.js"></script>
+
+        <!-- form validation -->
+        <script src="<?php echo $this->baseUrl(); ?>/js/validator/validator.js"></script>
+        
+        <!-- Datatables-->
+        <script src="<?php echo $this->baseUrl(); ?>/js/datatables/jquery.dataTables.min.js"></script>
+        <script src="<?php echo $this->baseUrl(); ?>/js/datatables/dataTables.bootstrap.js"></script>
+        <script src="<?php echo $this->baseUrl(); ?>/js/datatables/dataTables.buttons.min.js"></script>
+        <script src="<?php echo $this->baseUrl(); ?>/js/datatables/buttons.bootstrap.min.js"></script>
+        <script src="<?php echo $this->baseUrl(); ?>/js/datatables/jszip.min.js"></script>
+        <script src="<?php echo $this->baseUrl(); ?>/js/datatables/pdfmake.min.js"></script>
+        <script src="<?php echo $this->baseUrl(); ?>/js/datatables/vfs_fonts.js"></script>
+        <script src="<?php echo $this->baseUrl(); ?>/js/datatables/buttons.html5.min.js"></script>
+        <script src="<?php echo $this->baseUrl(); ?>/js/datatables/buttons.print.min.js"></script>
+        <script src="<?php echo $this->baseUrl(); ?>/js/datatables/dataTables.fixedHeader.min.js"></script>
+        <script src="<?php echo $this->baseUrl(); ?>/js/datatables/dataTables.keyTable.min.js"></script>
+        <script src="<?php echo $this->baseUrl(); ?>/js/datatables/dataTables.responsive.min.js"></script>
+        <script src="<?php echo $this->baseUrl(); ?>/js/datatables/responsive.bootstrap.min.js"></script>
+        <script src="<?php echo $this->baseUrl(); ?>/js/datatables/dataTables.scroller.min.js"></script>
+
+    </head>
+
+
+    <body class="nav-md">
+
+        <div class="container body" >
+
+
+            <div class="main_container" >
+
+                <!-- top navigation -->
+                <?php echo $this->partial('header_menu.phtml'); ?> 
+                <!-- /top navigation -->
+
+                <!-- left navigation -->
+                <?php echo $this->partial('left_menu.phtml'); ?> 
+                <!-- /left navigation -->
+
+                <!-- page content -->
+                <div class="right_col" role="main" >
+                    <div class="">
+                        <?php
+                        if (count($this->messages)) :
+                            foreach ($this->messages[0] as $key => $message) :
+                                ?>
+                                <div class="row-fluid" style=" max-height: 50px;">
+                                    <div class="span2"></div><div class="span6">
+                                        <div class="alert <?= $key ?>" style=" padding: 0px 35px 0px 15px; margin-top: 0px; margin-bottom: -3px;">
+                                            <button class="close" data-dismiss="alert" type="button">×</button>
+                                            <strong><?php echo $this->escape($message); ?></strong>
+                                        </div>
+                                    </div></div>
+                                <?php
+                            endforeach;
+                        endif;
+                        ?>
+                        <?php echo $this->layout()->content; ?>
+                    </div>
+
+                    <footer>
+                        <div class="copyright-info">
+                            <p class="pull-right">Powered By - <a href="https://tonmoysaharoy.ml">Tonmoy Saha Roy</a>  
+                            </p>
+                        </div>
+                        <div class="clearfix"></div>
+                    </footer>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="custom_notifications" class="custom-notifications dsp_none">
+            <ul class="list-unstyled notifications clearfix" data-tabbed_notifications="notif-group">
+            </ul>
+            <div class="clearfix"></div>
+            <div id="notif-group" class="tabbed_notifications"></div>
+        </div>
+
+
+
+    </body>
+
+</html>
