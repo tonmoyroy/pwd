@@ -23,8 +23,6 @@ class AdminController extends Zend_Controller_Action {
     }
 
     public function indexAction() {
-        Zend_Registry::set('ACTIVE_M_MENU', 'Dashboard');
-        Zend_Registry::set('ACTIVE_S_MENU', '');
         $user_id = $this->PWDSession->session_data['user_id'];
         $this->view->userinfo = $userinfo = $this->admin->getUserInfo($user_id);
     }
@@ -59,7 +57,7 @@ class AdminController extends Zend_Controller_Action {
             }
 
             if ($postdata['submit'] == 'update') {
-                
+
                 unset($postdata['submit']);
                 unset($postdata['p_email']);
                 $status = $this->admin->updateUser($postdata);
@@ -73,8 +71,10 @@ class AdminController extends Zend_Controller_Action {
     }
 
     public function updatestaffAction() {
-        $user_id = $this->PWDSession->session_data['user_id'];
-        $this->view->userlist = $userlist = $this->admin->getUserList();
+        if ($this->PWDSession->session_data['user_type_id'] == 1) {
+            $user_id = $this->PWDSession->session_data['user_id'];
+            $this->view->userlist = $userlist = $this->admin->getUserList();
+        }
     }
 
     public function sectormanageAction() {
