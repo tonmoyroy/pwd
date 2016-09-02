@@ -1,6 +1,4 @@
 <?php
-$active_m_menu = Zend_Registry::get('ACTIVE_M_MENU');
-$active_s_menu = Zend_Registry::get('ACTIVE_S_MENU');
 $user_name = Zend_Registry::get('USER_NAME');
 $user_type_id = Zend_Registry::get('USER_TYPE_ID');
 $user_id = Zend_Registry::get('USER_ID');
@@ -26,42 +24,22 @@ $user_id = Zend_Registry::get('USER_ID');
                 <div class="menu_section">
 
                     <ul class="nav side-menu">
-                        <li class="<?php
-                        if ($active_m_menu == 'app') {
-                            echo 'current';
-                        }
-                        ?>">
+                        <li>
                             <a><i class="fa fa-user"></i> APP Management <span class="fa fa-chevron-down"></span></a>
                             <ul class="nav child_menu" style="display: none">
-                                <li class="<?php
-                                if ($active_s_menu == 'sector') {
-                                    echo 'current';
-                                }
-                                ?>"><a href="<?= $this->baseUrl(); ?>/Admin/sectormanage">Sector Management</a>
+                                <li><a href="<?= $this->baseUrl(); ?>/Admin/sectormanage">Sector Management</a>
                                 </li>
-                                <li class="<?php
-                                if ($active_s_menu == 'approve') {
-                                    echo 'current';
-                                }
-                                ?>"><a href="<?= $this->baseUrl(); ?>/Admin/approveauthmanage">Approval Authority Management</a>
+                                <li><a href="<?= $this->baseUrl(); ?>/Admin/approveauthmanage">Approval Authority Management</a>
                                 </li>
-                                <li class="<?php
-                                if ($active_s_menu == 'proctype') {
-                                    echo 'current';
-                                }
-                                ?>"><a href="<?= $this->baseUrl(); ?>/Admin/proctypemanage">Procurement Nature Management</a>
+                                <li><a href="<?= $this->baseUrl(); ?>/Admin/proctypemanage">Procurement Nature Management</a>
                                 </li>
-                                <li class="<?php
-                                if ($active_s_menu == 'procmethod') {
-                                    echo 'current';
-                                }
-                                ?>"><a href="<?= $this->baseUrl(); ?>/Admin/procmethodmanage">Procurement Method Management</a>
+                                <li><a href="<?= $this->baseUrl(); ?>/Admin/procmethodmanage">Procurement Method Management</a>
                                 </li>
                             </ul>
                         </li>
                         <li><a><i class="fa fa-user"></i> Staff Management <span class="fa fa-chevron-down"></span></a>
                             <ul class="nav child_menu" style="display: none">
-                                <li><a href="<?= $this->baseUrl(); ?>/Admin/createstaff">Create New Staff</a>
+                                <li><a href="<?= $this->baseUrl(); ?>/Admin/createupdatestaff">Create New Staff</a>
                                 </li>
                                 <li><a href="<?= $this->baseUrl(); ?>/Admin/updatestaff">Update Existing Staff</a>
                                 </li>

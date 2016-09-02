@@ -29,18 +29,40 @@ class AdminController extends Zend_Controller_Action {
         $this->view->userinfo = $userinfo = $this->admin->getUserInfo($user_id);
     }
 
-    public function createstaffAction() {
+    public function createupdatestaffAction() {
         if ($this->PWDSession->session_data['user_type_id'] == 1) {
             $user_id = $this->PWDSession->session_data['user_id'];
+
+
             $this->view->usertypes = $usertypes = $this->admin->getUserTypes();
+
+            $getdata = $this->_request->getQuery();
+            if ($getdata['userid']) {
+                $this->view->userid = $getdata['userid'];
+                $this->view->userinfo = $this->admin->getUserInfo($getdata['userid']);
+            }
+
             $postdata = $this->_request->getPost();
-            if ($postdata) {
+            if ($postdata['submit'] == 'submit') {
                 //print_r($postdata);exit;
+                unset($postdata['submit']);
                 if (!$postdata['p_user_type']) {
                     $this->flashMessenger->addMessage(array('alert-danger' => "Please Select User Type"));
                     $this->_redirect('Admin/createstaff');
                 }
                 $status = $this->admin->createUser($postdata);
+                if ($status['o_status_code'] == 1)
+                    $this->flashMessenger->addMessage(array('alert-success' => $status['o_status_message']));
+                else
+                    $this->flashMessenger->addMessage(array('alert-danger' => $status['o_status_message']));
+                $this->_redirect('Admin/updatestaff');
+            }
+
+            if ($postdata['submit'] == 'update') {
+                
+                unset($postdata['submit']);
+                unset($postdata['p_email']);
+                $status = $this->admin->updateUser($postdata);
                 if ($status['o_status_code'] == 1)
                     $this->flashMessenger->addMessage(array('alert-success' => $status['o_status_message']));
                 else
@@ -55,17 +77,7 @@ class AdminController extends Zend_Controller_Action {
         $this->view->userlist = $userlist = $this->admin->getUserList();
     }
 
-    public function updatestaffdataAction() {
-
-        $userid = $_GET['userid'];
-        //print_r($userid);
-        //exit;
-        $this->view->userinfo = $userinfo = $this->admin->getUserInfo($user_id);
-    }
-
     public function sectormanageAction() {
-        Zend_Registry::set('ACTIVE_M_MENU', 'Dashboard');
-        Zend_Registry::set('ACTIVE_S_MENU', 'sector');
 
         if ($this->PWDSession->session_data['user_type_id'] == 1) {
 
@@ -73,11 +85,8 @@ class AdminController extends Zend_Controller_Action {
             $getdata = $this->_request->getQuery();
             $postdata = $this->_request->getPost();
 
-            unset($postdata['submit']);
-//            print_r($postdata);
-//            exit;
-            if ($postdata['submit']) {
-                $status = $this->admin->createsector($postdata);
+            if ($postdata) {
+                $status = $this->admin->createUpdateSector($postdata);
                 if ($status['o_status_code'] == 1)
                     $this->flashMessenger->addMessage(array('alert-success' => $status['o_status_message']));
                 else

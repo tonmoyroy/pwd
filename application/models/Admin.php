@@ -17,8 +17,7 @@ class Application_Model_Admin extends Zend_Db_Table {
                 U.EMAIL
            FROM USERS U, L_USER_TYPES UT
           WHERE U.USER_TYPE_ID = UT.USER_TYPE_ID 
-                AND U.USER_ID = $user_id
-                AND U.ACTIVE_YN = 'Y'";
+                AND U.USER_ID = $user_id";
         $data = $this->_db->fetchRow($sql);
         //print_r($data);exit;
         return $data;
@@ -56,6 +55,32 @@ class Application_Model_Admin extends Zend_Db_Table {
         //print_r ($all_data);exit();
         return $all_data;
     }
+    
+    
+    public function updateUser($data) {
+        $o_status_code = sprintf('%20f', '');
+        $o_status_message = sprintf('%4000s', '');
+
+        $out_parms = array(
+            "o_status_code" => &$o_status_code,
+            "o_status_message" => &$o_status_message
+        );
+
+        $all_data = array_merge($data, $out_parms);
+        //print_r ($all_data);exit();
+
+        $this->_db->query("BEGIN UPDATE_USER(
+           :p_user_id,
+           :p_user_name,
+           :p_full_name,
+           :p_mobile,
+           :p_active_yn,
+           :o_status_code,
+           :o_status_message); END;", $all_data);
+
+        //print_r ($all_data);exit();
+        return $all_data;
+    }
 
     public function getUserList() {
         $sql = "SELECT U.USER_ID,
@@ -74,7 +99,7 @@ class Application_Model_Admin extends Zend_Db_Table {
         return $data;
     }
 
-    public function createSector($data) {
+    public function createUpdateSector($data) {
         $o_status_code = sprintf('%20f', '');
         $o_status_message = sprintf('%4000s', '');
 
@@ -86,7 +111,8 @@ class Application_Model_Admin extends Zend_Db_Table {
         $all_data = array_merge($data, $out_parms);
         //print_r ($all_data);exit();
 
-        $this->_db->query("BEGIN CREATE_SECTOR(
+        $this->_db->query("BEGIN CREATE_OR_UPDATE_SECTOR(
+           :p_sector_id,
            :p_sector_name,
            :p_sector_enable,
            :o_status_code,
@@ -107,12 +133,7 @@ class Application_Model_Admin extends Zend_Db_Table {
         return $data;
     }
 
-    public function updateSector($sec_id,$sec_name,$enable) {
-        $this->_db->query("UPDATE L_SECTOR SET SECTOR_ID = SECTOR_ID,SECTOR_NAME = UPPER ('$sec_name'),ENABLE_YN = '$enable',CREATE_DATE = SYSDATE WHERE SECTOR_ID = $sec_id");
-        return 1;
-    }
-    
-    public function getSector($sec_id){
+    public function getSector($sec_id) {
         $sql = "SELECT SECTOR_ID,
                 SECTOR_NAME,
                 ENABLE_YN,

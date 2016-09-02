@@ -1,9 +1,9 @@
 <div class="row">
     <div class="col-md-1 col-sm-1 col-xs-1"></div>
-    <div class="col-md-10 col-sm-10 col-xs-10" style="min-height: 500px;padding-top: 30px" >
+    <div class="col-md-10 col-sm-10 col-xs-10" style="min-height: 630px;padding-top: 30px" >
         <div class="x_panel">
             <div class="x_title">
-                <h2>Create New Staff</h2>
+                <h2>Create / Update Staff</h2>
                 <ul class="nav navbar-right panel_toolbox">
                     <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                     </li>
@@ -13,38 +13,45 @@
                 <div class="clearfix"></div>
             </div>
             <div class="x_content">
-                <form class="form-horizontal form-label-left" novalidate autocomplete="off" action="<?=$this->baseUrl()?>/Admin/createstaff" method="post">
+                <form class="form-horizontal form-label-left" novalidate autocomplete="off" action="<?= $this->baseUrl() ?>/Admin/createupdatestaff" method="post">
                     <div class="item form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Select User Type <span class="required">*</span>
                         </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <select class="select2_single form-control" tabindex="-1" required="required" name="p_user_type">
-                                <option value="">----Please Select----</option>
-                                <?php foreach($this->usertypes as $types){?>
-                                <option value="<?= $types['USER_TYPE_ID']?>"><?= $types['USER_TYPE_NAME']?></option>
-                                <?php }?>
-                            </select>
-                        </div>
+                        <?php if (!$this->userid) { ?>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select class="select2_single form-control" tabindex="-1" required="required" name="p_user_type">
+                                    <option value="">----Please Select----</option>
+                                    <?php foreach ($this->usertypes as $types) { ?>
+                                        <option value="<?= $types['USER_TYPE_ID'] ?>"><?= $types['USER_TYPE_NAME'] ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        <?php } else { ?>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="hidden" name="p_user_id" value="<?= $this->userid ?>">
+                                <input class="form-control col-md-7 col-xs-12" readonly value="<?= $this->userinfo['USER_TYPE_NAME'] ?>" required="required" type="text">
+                            </div>
+                        <?php } ?>
                     </div>
                     <div class="item form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">User Name <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input class="form-control col-md-7 col-xs-12"  name="p_user_name" placeholder="Enter Login User Name" required="required" type="text">
+                            <input class="form-control col-md-7 col-xs-12"  name="p_user_name" placeholder="Enter Login User Name" <?php if ($this->userinfo['USER_NAME']) { ?> value="<?= $this->userinfo['USER_NAME'] ?>" readonly <?php } ?>  required="required" type="text">
                         </div>
                     </div>
                     <div class="item form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Full Name <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input id="name" class="form-control col-md-7 col-xs-12"  name="p_full_name" placeholder="Enter Full Name" required="required" type="text">
+                            <input id="name" class="form-control col-md-7 col-xs-12"  name="p_full_name" placeholder="Enter Full Name" <?php if ($this->userinfo['FULL_NAME']) { ?> value="<?= $this->userinfo['FULL_NAME'] ?>" <?php } ?> required="required" type="text">
                         </div>
                     </div>
                     <div class="item form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Email <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input type="email" id="email" name="p_email" required="required" data-validate-email placeholder="Enter Email ID" class="form-control col-md-7 col-xs-12">
+                            <input type="email" id="email" name="p_email" required="required" data-validate-email placeholder="Enter Email ID" <?php if ($this->userinfo['EMAIL']) { ?> value="<?= $this->userinfo['EMAIL'] ?>" readonly <?php } ?> class="form-control col-md-7 col-xs-12">
                         </div>
                     </div>
 
@@ -52,15 +59,32 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="number">Contact No. 
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input type="text" id="occupation" name="p_mobile"   placeholder="Enter Contact Number" class="form-control col-md-7 col-xs-12">
+                            <input type="text" id="occupation" name="p_mobile"   placeholder="Enter Contact Number" <?php if ($this->userinfo['MOBILE']) { ?> value="<?= $this->userinfo['MOBILE'] ?>" <?php } ?> class="form-control col-md-7 col-xs-12">
                         </div>
                     </div>
+
+                    <?php if ($this->userid) { ?>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Select User Status <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select class="select2_single form-control" tabindex="-1" required="required" name="p_active_yn">
+                                    <option value="Y" <?php if($this->userinfo['ACTIVE_YN']=='Y') echo "selected";?>>ACTIVE</option>
+                                    <option value="N" <?php if($this->userinfo['ACTIVE_YN']=='N') echo "selected";?>>INACTIVE</option>
+                                </select>
+                            </div>
+                        </div>
+                    <?php } ?>
 
                     <div class="ln_solid"></div>
                     <div class="form-group">
                         <div class="col-md-6 col-md-offset-3">
                             <button type="submit" class="btn btn-primary">Cancel</button>
-                            <button id="send" type="submit"  class="btn btn-success">Submit</button>
+                            <?php if ($this->userid) { ?>
+                                <button  type="submit" name="submit" value="update" class="btn btn-success">Update</button>
+                            <?php } else { ?>
+                                <button  type="submit" name="submit" value="submit"  class="btn btn-success">Submit</button>
+                            <?php } ?>
                         </div>
                     </div>
                 </form>
@@ -72,7 +96,7 @@
 
 
 
-<script>
+<!--<script>
     // initialize the validator function
     validator.message['date'] = 'not a real date';
 
@@ -113,7 +137,7 @@
         if (this.checked)
             $('form .alert').remove();
     }).prop('checked', false);
-</script>
+</script>-->
 
 <!-- select2 -->
 <script>

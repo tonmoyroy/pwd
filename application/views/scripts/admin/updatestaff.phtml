@@ -45,9 +45,9 @@
                                     if ($user['ACTIVE_YN'] == 'Y')
                                         echo 'ENABLE';
                                     else
-                                        'DISABLE';
+                                        echo 'DISABLE';
                                     ?></td>
-                                <td><a href="updatestaffdata?userid=<?= $user['USER_ID'] ?>" class="btn btn-success">Update</a></td>
+                                <td><a href="createupdatestaff?userid=<?= $user['USER_ID'] ?>" class="btn btn-success">Update</a></td>
 <!--                        <form action="updatestaffdata" method="get">
                             <input type="hidden" value="<?= $user['USER_ID'] ?>" name="userid"/>
                             <td><input type="submit" value="Update" class="btn btn-success"/></td>

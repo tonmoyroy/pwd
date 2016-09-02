@@ -14,7 +14,8 @@
             </div>
             <div class="x_content">
                 <form class="form-horizontal form-label-left" novalidate autocomplete="off" action="<?= $this->baseUrl() ?>/Admin/sectormanage" method="post">
-
+              
+                    <input type="hidden" name="p_sector_id" value="<?= $this->sectordata['SECTOR_ID']?>">
                     <div class="item form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Sector Name <span class="required">*</span>
                         </label>
@@ -39,7 +40,7 @@
                     <div class="form-group">
                         <div class="col-md-6 col-md-offset-3">
                             <a href="index" class="btn btn-primary">Cancel</a>
-                            <button  type="submit" name="submit" value="submit" class="btn btn-success">Submit</button>
+                            <button  type="submit" class="btn btn-success">Submit</button>
                         </div>
                     </div>
                 </form>
