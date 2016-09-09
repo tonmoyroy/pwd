@@ -1,0 +1,80 @@
+<div id="mycontainer"  class="row">
+    <div class="col-md-1 col-sm-1 col-xs-1"></div>
+    <div class="col-md-10 col-sm-10 col-xs-10" >
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Create / Update Contractor Profile</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                    <li><a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <form class="form-horizontal form-label-left" novalidate autocomplete="off" action="<?= $this->baseUrl() ?>/Admin/createupdatecontractor" method="post">
+                    <?php if($this->userid){ ?><input type="hidden" name="p_id" value="<?= $this->userinfo['CONTRACTOR_ID']?>"><?php }?>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Contractor Name <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input class="form-control col-md-7 col-xs-12"  name="p_name" placeholder="Enter Contractor Name" <?php if ($this->userinfo['NAME']) { ?> value="<?= $this->userinfo['NAME'] ?>"  <?php } ?>  required="required" type="text">
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Address <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="name" class="form-control col-md-7 col-xs-12"  name="p_address" placeholder="Enter Full Address" <?php if ($this->userinfo['ADDRESS']) { ?> value="<?= $this->userinfo['ADDRESS'] ?>" <?php } ?> required="required" type="text">
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Email <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="email" id="email" name="p_email" required="required" data-validate-email placeholder="Enter Email ID" <?php if ($this->userinfo['EMAIL']) { ?> value="<?= $this->userinfo['EMAIL'] ?>"  <?php } ?> class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="number">Contact No.  <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="occupation" name="p_phone" required="required"   placeholder="Enter Contact Number" <?php if ($this->userinfo['PHONE']) { ?> value="<?= $this->userinfo['PHONE'] ?>" <?php } ?> class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+
+                    <?php if ($this->userid) { ?>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Select User Status <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select class="select2_single form-control" tabindex="-1" required="required" name="p_active_yn">
+                                    <option value="Y" <?php if($this->userinfo['ACTIVE_YN']=='Y') echo "selected";?>>ACTIVE</option>
+                                    <option value="N" <?php if($this->userinfo['ACTIVE_YN']=='N') echo "selected";?>>INACTIVE</option>
+                                </select>
+                            </div>
+                        </div>
+                    <?php } ?>
+
+                    <div class="ln_solid"></div>
+                    <div class="form-group">
+                        <div class="col-md-6 col-md-offset-3">
+                            <button type="submit" class="btn btn-primary">Cancel</button>
+                            <?php if ($this->userid) { ?>
+                                <button  type="submit" name="submit" value="update" class="btn btn-success">Update</button>
+                            <?php } else { ?>
+                                <button  type="submit" name="submit" value="submit"  class="btn btn-success">Submit</button>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

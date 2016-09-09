@@ -90,12 +90,35 @@ class Application_Model_Admin extends Zend_Db_Table {
                 U.UPDATE_DATE,
                 U.USER_TYPE_ID,
                 UT.USER_TYPE_NAME,
+                UT.ACTIVE_YN ACTIVE_YN_TYPE,
+                UT.APPROVE_AUTH,
                 U.MOBILE,
                 U.EMAIL,
                 U.FULL_NAME
            FROM USERS U, L_USER_TYPES UT
           WHERE U.USER_TYPE_ID = UT.USER_TYPE_ID";
         $data = $this->_db->fetchAll($sql);
+        return $data;
+    }
+    
+    
+    public function getUserTypeList() {
+        $sql = "SELECT 
+                USER_TYPE_ID, USER_TYPE_NAME, ACTIVE_YN, 
+                   APPROVE_AUTH
+                FROM L_USER_TYPES ORDER BY USER_TYPE_ID";
+        $data = $this->_db->fetchAll($sql);
+        return $data;
+    }
+    
+    public function getUserType($id){
+        $sql = "SELECT USER_TYPE_ID,
+                USER_TYPE_NAME,
+                ACTIVE_YN,
+                APPROVE_AUTH
+           FROM L_USER_TYPES
+          WHERE USER_TYPE_ID = $id";
+        $data = $this->_db->fetchRow($sql);
         return $data;
     }
 
@@ -153,6 +176,16 @@ class Application_Model_Admin extends Zend_Db_Table {
         return $data;
     }
     
+    public function getProcMethodList(){
+        $sql = "SELECT PROC_METHOD_ID,
+                PROC_METHOD_NAME,
+                ACTIVE_YN,
+                CREATE_DATE
+           FROM L_PROCUREMENT_METHOD ORDER BY PROC_METHOD_ID";
+        $data = $this->_db->fetchAll($sql);
+        return $data;
+    }
+    
     public function createUpdateProcType($data){
         $o_status_code = sprintf('%20f', '');
         $o_status_message = sprintf('%4000s', '');
@@ -176,6 +209,57 @@ class Application_Model_Admin extends Zend_Db_Table {
         return $all_data;
     }
     
+    
+    public function createUpdateUserType($data){
+        $o_status_code = sprintf('%20f', '');
+        $o_status_message = sprintf('%4000s', '');
+
+        $out_parms = array(
+            "o_status_code" => &$o_status_code,
+            "o_status_message" => &$o_status_message
+        );
+
+        $all_data = array_merge($data, $out_parms);
+        //print_r ($all_data);exit();
+
+        $this->_db->query("BEGIN CREATE_OR_UPDATE_USER_TYPE(
+           :p_type_id,
+           :p_type,
+           :p_type_yn,
+           :p_auth_yn,
+           :o_status_code,
+           :o_status_message); END;", $all_data);
+
+        //print_r ($all_data);exit();
+        return $all_data;
+    }
+    
+    
+    
+    
+    public function createUpdateProcMethod($data){
+        $o_status_code = sprintf('%20f', '');
+        $o_status_message = sprintf('%4000s', '');
+
+        $out_parms = array(
+            "o_status_code" => &$o_status_code,
+            "o_status_message" => &$o_status_message
+        );
+
+        $all_data = array_merge($data, $out_parms);
+        //print_r ($all_data);exit();
+
+        $this->_db->query("BEGIN CREATE_OR_UPDATE_PROC_METHOD(
+           :p_proc_id,
+           :p_proc_method,
+           :p_proc_method_yn,
+           :o_status_code,
+           :o_status_message); END;", $all_data);
+
+        //print_r ($all_data);exit();
+        return $all_data;
+    }
+    
     public function getProcType($proc_id){
         $sql = "SELECT PROC_ID,
                 PROC_TYPE_NAME,
@@ -186,5 +270,94 @@ class Application_Model_Admin extends Zend_Db_Table {
         $data = $this->_db->fetchRow($sql);
         //print_r($data);exit;
         return $data;
+    }
+    
+    public function getProcMethod($proc_id){
+        $sql = "SELECT PROC_METHOD_ID,
+                PROC_METHOD_NAME,
+                ACTIVE_YN,
+                CREATE_DATE
+           FROM L_PROCUREMENT_METHOD
+          WHERE PROC_METHOD_ID = '$proc_id'";
+        $data = $this->_db->fetchRow($sql);
+        //print_r($data);exit;
+        return $data;
+    }
+    
+    
+    public function createContractor($data){
+        $o_status_code = sprintf('%20f', '');
+        $o_status_message = sprintf('%4000s', '');
+
+        $out_parms = array(
+            "o_status_code" => &$o_status_code,
+            "o_status_message" => &$o_status_message
+        );
+
+        $all_data = array_merge($data, $out_parms);
+        //print_r ($all_data);exit();
+
+        $this->_db->query("BEGIN CREATE_CONTRACTOR(
+           :p_name,
+           :p_address,
+           :p_email,
+           :p_phone,
+           :o_status_code,
+           :o_status_message); END;", $all_data);
+
+        //print_r ($all_data);exit();
+        return $all_data;
+    }
+    
+    public function getContractorList(){
+        $sql = "SELECT 
+                CONTRACTOR_ID, NAME, ADDRESS, 
+                   EMAIL, PHONE, ACTIVE_YN, 
+                   CREATE_DATE
+                FROM CONTRACTOR";
+        $data = $this->_db->fetchAll($sql);
+        //print_r($data);exit;
+        return $data;
+    }
+    
+    public function getContractorInfo($id){
+        $sql = "SELECT CONTRACTOR_ID,
+                NAME,
+                ADDRESS,
+                EMAIL,
+                PHONE,
+                ACTIVE_YN,
+                CREATE_DATE
+           FROM CONTRACTOR
+          WHERE CONTRACTOR_ID = '$id'";
+        $data = $this->_db->fetchRow($sql);
+        //print_r($data);exit;
+        return $data;
+    }
+    
+    public function updateContractor($data) {
+        $o_status_code = sprintf('%20f', '');
+        $o_status_message = sprintf('%4000s', '');
+
+        $out_parms = array(
+            "o_status_code" => &$o_status_code,
+            "o_status_message" => &$o_status_message
+        );
+
+        $all_data = array_merge($data, $out_parms);
+        //print_r ($all_data);exit();
+
+        $this->_db->query("BEGIN UPDATE_CONTRACTOR(
+           :p_id,
+           :p_name,
+           :p_address,
+           :p_email,
+           :p_phone,
+           :p_active_yn,
+           :o_status_code,
+           :o_status_message); END;", $all_data);
+
+        //print_r ($all_data);exit();
+        return $all_data;
     }
 }

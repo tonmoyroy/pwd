@@ -29,11 +29,12 @@ $user_id = Zend_Registry::get('USER_ID');
                             <ul class="nav child_menu" style="display: none">
                                 <li><a href="<?= $this->baseUrl(); ?>/Admin/sectormanage">Sector Management</a>
                                 </li>
-                                <li><a href="<?= $this->baseUrl(); ?>/Admin/approveauthmanage">Approval Authority Management</a>
-                                </li>
                                 <li><a href="<?= $this->baseUrl(); ?>/Admin/proctypemanage">Procurement Nature Management</a>
                                 </li>
+                                
                                 <li><a href="<?= $this->baseUrl(); ?>/Admin/procmethodmanage">Procurement Method Management</a>
+                                </li>
+                                <li><a href="<?= $this->baseUrl(); ?>/Admin/approveauthmanage">Approval Authority Management</a>
                                 </li>
                             </ul>
                         </li>
@@ -47,20 +48,13 @@ $user_id = Zend_Registry::get('USER_ID');
                         </li>
                         <li><a><i class="fa fa-user-plus"></i> Contractor Management <span class="fa fa-chevron-down"></span></a>
                             <ul class="nav child_menu" style="display: none">
-                                <li><a href="<?= $this->baseUrl(); ?>/Admin/createcontractor">Create New Profile</a>
+                                <li><a href="<?= $this->baseUrl(); ?>/Admin/createupdatecontractor">Create New Profile</a>
                                 </li>
                                 <li><a href="<?= $this->baseUrl(); ?>/Admin/updatecontractor">Update Existing Profile</a>
                                 </li> 
                             </ul>
                         </li>
-                        <li><a><i class="fa fa-edit"></i> Tender Management <span class="fa fa-chevron-down"></span></a>
-                            <ul class="nav child_menu" style="display: none">
-                                <li><a href="#">Create New Tender</a>
-                                </li>
-                                <li><a href="#">Update Existing Tender</a>
-                                </li>
-                            </ul>
-                        </li>
+                        
 
 
                     </ul>

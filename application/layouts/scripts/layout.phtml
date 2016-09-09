@@ -98,6 +98,13 @@
         <script src="<?php echo $this->baseUrl(); ?>/js/datatables/dataTables.scroller.min.js"></script>
 
     </head>
+    <script>
+        window.onload=function(){
+        var height =  $(document).height();
+        document.getElementById("mycontainer").style.minHeight=height-90+"px";
+        
+    }
+    </script>
 
 
     <body class="nav-md">

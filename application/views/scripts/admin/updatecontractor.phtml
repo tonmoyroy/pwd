@@ -18,11 +18,11 @@
                     <thead>
                         <tr>
                             <th>SL#</th>
-                            <th>FULL NAME</th>
-                            <th>CREATE DATE</th>
-                            <th>USER TYPE</th>
-                            <th>MOBILE NO.</th>
+                            <th>CONTRACTOR ID</th>
+                            <th>NAME</th>
+                            <th>ADDRESS</th>
                             <th>EMAIL</th>
+                            <th>MOBILE NO.</th>
                             <th>STATUS</th>
                             <th>ACTION</th>
                         </tr>
@@ -36,18 +36,18 @@
                             ?>
                             <tr>
                                 <td><?= $i++; ?></td>
-                                <td><?= $user['FULL_NAME'] ?></td>
-                                <td><?= $user['CREATE_DATE'] ?></td>
-                                <td><?= $user['USER_TYPE_NAME'] ?></td>
-                                <td><?= $user['MOBILE'] ?></td>
+                                <td><?= $user['CONTRACTOR_ID'] ?></td>
+                                <td><?= $user['NAME'] ?></td>
+                                <td><?= $user['ADDRESS'] ?></td>
                                 <td><?= $user['EMAIL'] ?></td>
+                                <td><?= $user['PHONE'] ?></td>
                                 <td><?php
                                     if ($user['ACTIVE_YN'] == 'Y')
                                         echo 'ENABLE';
                                     else
                                         echo 'DISABLE';
                                     ?></td>
-                                <td><a href="createupdatestaff?userid=<?= $user['USER_ID'] ?>" class="btn btn-success">Update</a></td>
+                                <td><a href="createupdatecontractor?userid=<?= $user['CONTRACTOR_ID'] ?>" class="btn btn-success">Update</a></td>
 <!--                        <form action="updatestaffdata" method="get">
                             <input type="hidden" value="<?= $user['USER_ID'] ?>" name="userid"/>
                             <td><input type="submit" value="Update" class="btn btn-success"/></td>

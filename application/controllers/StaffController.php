@@ -7,6 +7,9 @@ class StaffController extends Zend_Controller_Action
     {
         $this->_helper->_layout()->setLayout('layout');
         $this->PWDSession = new Zend_Session_Namespace('pwd');
+        if (!$this->PWDSession->session_data) {
+            $this->_redirect('index/login');
+        }
         $this->flashMessenger = $this->_helper->FlashMessenger;
         $this->staff = new Application_Model_Admin();
         $this->help = $this->view->addHelperPath('views/helpers');
