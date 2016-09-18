@@ -30,5 +30,17 @@ class Application_Model_UserManage extends Zend_Db_Table {
 //        exit;
         return $params;
     }
+    
+    public function getFiscalYear(){
+        $sql = "SELECT FISCAL_YR_ID,
+                EXTRACT (YEAR FROM START_DATE) START_YEAR,
+                EXTRACT (YEAR FROM END_DATE) END_YEAR,
+                ACTIVE_YN
+           FROM L_FISCAL_YEAR
+          WHERE ACTIVE_YN = 'Y'
+       ORDER BY START_YEAR";
+        $data = $this->_db->fetchAll($sql);
+        return $data;
+    }
 
 }

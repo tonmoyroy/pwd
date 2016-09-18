@@ -25,6 +25,8 @@ class AdminController extends Zend_Controller_Action {
         Zend_Registry::set('USER_TYPE_ID', $user_type_id);
         $user_id = $this->PWDSession->session_data['user_id'];
         Zend_Registry::set('USER_ID', $user_id);
+        $fiscal_year = $this->PWDSession->session_data['fiscal_year'];
+        Zend_Registry::set('FISCAL_YR', $fiscal_year);
     }
 
     public function indexAction() {

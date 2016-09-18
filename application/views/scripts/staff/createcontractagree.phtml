@@ -1,0 +1,412 @@
+<div id="mycontainer"  class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12" style="padding-top: 20px" >
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Add New Contract Agreement</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                    <li><a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <form id="form" class="form-horizontal form-label-left" novalidate autocomplete="off" action="<?= $this->baseUrl() ?>/Staff/createcontractagree" method="post">
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Enter CA No. <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input class="form-control col-md-7 col-xs-12" name="p_ca_no" placeholder="Enter Unique Contract Agreement Number" required="required" type="text">
+                        </div>
+                    </div>
+                    
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Name of Work <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input name="p_work_name" required="required" placeholder="Enter Full Name of the Work" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Select Sector <span class="required">*</span>
+                        </label>
+                        <?php if (!$this->sectorid) { ?>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="select1" class="select2_single form-control" name="p_sector" required>
+                                    <option value="">Please Select</option>
+                                    <?php foreach ($this->sectorlist as $types) { ?>
+                                        <option value="<?= $types['SECTOR_ID'] ?>"><?= $types['SECTOR_NAME'] ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        <?php } else { ?>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="hidden" name="p_sector" value="<?= $this->sectorid ?>">
+                                <input class="form-control col-md-7 col-xs-12" readonly value="<?= $this->userinfo['USER_TYPE_NAME'] ?>" required="required" type="text">
+                            </div>
+                        <?php } ?>
+                    </div>
+                    
+                    
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Select Sub-Division <span class="required">*</span>
+                        </label>
+                        <?php if (!$this->subdivid) { ?>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="select2" class="select2_single form-control" name="p_sub_div" required>
+                                    <option value="">Please Select</option>
+                                    <?php foreach ($this->sdivlist as $types) { ?>
+                                        <option value="<?= $types['SUB_DIV_ID'] ?>"><?= $types['SUB_DIV_NAME'] ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        <?php } else { ?>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="hidden" name="p_sector" value="<?= $this->subdivid ?>">
+                                <input class="form-control col-md-7 col-xs-12" readonly value="<?= $this->userinfo['USER_TYPE_NAME'] ?>" required="required" type="text">
+                            </div>
+                        <?php } ?>
+                    </div>
+
+                    
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Approved Estimate Cost <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="number" name="p_est_cost" onblur="number2text(this.value)" placeholder="Enter Estimated Cost" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Cost in Words <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="in_words" readonly class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Approving Authority <span class="required">*</span>
+                        </label>
+                        <?php if (!$this->authorityid) { ?>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="select3" class="select2_single form-control" name="p_auth" required>
+                                    <option value="">Please Select</option>
+                                    <?php foreach ($this->authlist as $types) { ?>
+                                        <option value="<?= $types['USER_TYPE_ID'] ?>"><?= $types['USER_TYPE_NAME'] ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        <?php } else { ?>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="hidden" name="p_auth" value="<?= $this->authorityid ?>">
+                                <input class="form-control col-md-7 col-xs-12" readonly value="<?= $this->userinfo['USER_TYPE_NAME'] ?>" required="required" type="text">
+                            </div>
+                        <?php } ?>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Procurement Nature <span class="required">*</span>
+                        </label>
+                        <?php if (!$this->authorityid) { ?>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="select4" class="select2_single form-control" name="p_proc_nature" required>
+                                    <option value="">Please Select</option>
+                                    <?php foreach ($this->proclist as $types) { ?>
+                                        <option value="<?= $types['PROC_ID'] ?>"><?= $types['PROC_TYPE_NAME'] ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        <?php } else { ?>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="hidden" name="p_proc_nature" value="<?= $this->authorityid ?>">
+                                <input class="form-control col-md-7 col-xs-12" readonly value="<?= $this->userinfo['USER_TYPE_NAME'] ?>" required="required" type="text">
+                            </div>
+                        <?php } ?>
+                    </div>
+
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Procurement Method <span class="required">*</span>
+                        </label>
+                        <?php if (!$this->authorityid) { ?>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="select5" class="select2_single form-control" name="p_proc_method" required>
+                                    <option value="">Please Select</option>
+                                    <?php foreach ($this->procmethlist as $types) { ?>
+                                        <option value="<?= $types['PROC_METHOD_ID'] ?>"><?= $types['PROC_METHOD_NAME'] ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        <?php } else { ?>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="hidden" name="p_proc_method" value="<?= $this->authorityid ?>">
+                                <input class="form-control col-md-7 col-xs-12" readonly value="<?= $this->userinfo['USER_TYPE_NAME'] ?>" required="required" type="text">
+                            </div>
+                        <?php } ?>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Work Order Value <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="number" name="p_work_value" onblur="number2text2(this.value)" placeholder="Enter Work Order Value"  required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Value in Words <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="in_words_2" readonly class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Select Contractor <span class="required">*</span>
+                        </label>
+                        <?php if (!$this->conid) { ?>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="select6" class="select2_single form-control" name="p_contractor_id" >
+                                    <option value="">Please Select</option>
+                                    <?php foreach ($this->conlist as $types) { ?>
+                                        <option value="<?= $types['CONTRACTOR_ID'] ?>"><?= $types['NAME'] ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        <?php } else { ?>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="hidden" name="p_proc_method" value="<?= $this->conid ?>">
+                                <input class="form-control col-md-7 col-xs-12" readonly value="<?= $this->userinfo['USER_TYPE_NAME'] ?>" required="required" type="text">
+                            </div>
+                        <?php } ?>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Signing Date <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="birthday"  class="date-picker form-control col-md-7 col-xs-12" placeholder="Enter Sign Date" name="p_sign_date" required="required" type="text">
+                        </div>
+                    </div>
+
+                    <div class="ln_solid"></div>
+                    <div class="form-group">
+                        <div class="col-md-6 col-md-offset-3">
+                            <a href="index" class="btn btn-primary">Cancel</a>
+                            <button id="send" type="submit" class="btn btn-success">Submit</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#birthday').daterangepicker({
+            singleDatePicker: true,
+            calender_style: "picker_2"
+        }, function (start, end, label) {
+            console.log(start.toISOString(), end.toISOString(), label);
+        });
+    });
+
+    // initialize the validator function
+    validator.message['date'] = 'not a real date';
+
+    // validate a field on "blur" event, a 'select' on 'change' event & a '.reuired' classed multifield on 'keyup':
+    $('form')
+            .on('blur', 'input[required], input.optional, select.required', validator.checkField)
+            .on('change', 'select.required', validator.checkField)
+            .on('keypress', 'input[required][pattern]', validator.keypress);
+
+    $('.multi.required')
+            .on('keyup blur', 'input', function () {
+                validator.checkField.apply($(this).siblings().last()[0]);
+            });
+
+    // bind the validation to the form submit event
+    //$('#send').click('submit');//.prop('disabled', true);
+
+    $('form').submit(function (e) {
+        e.preventDefault();
+        var submit = true;
+        // evaluate the form using generic validaing
+        
+        if (!validator.checkAll($(this))) {
+            submit = false;
+        }
+        
+        if(!document.getElementById('select1').value){
+            alert('Enter Sector');
+            submit = false;return false;
+        }
+        
+        if(!document.getElementById('select2').value){
+            alert('Enter Sub-Division');
+            submit = false;return false;
+        }
+        
+        if(!document.getElementById('select3').value){
+            alert('Enter Approving Authority');
+            submit = false;return false;
+        }
+        
+        if(!document.getElementById('select4').value){
+            alert('Enter Procurement Nature');
+            submit = false;return false;
+        }
+        
+        if(!document.getElementById('select5').value){
+            alert('Enter Procurement Method');
+            submit = false;return false;
+        }
+        
+        if(!document.getElementById('select6').value){
+            alert('Enter Contractor Name');
+            submit = false;return false;
+        }
+        
+        if(!document.getElementById('birthday').value){
+            alert('Enter Sign Date');
+            submit = false;return false;
+        }
+
+        if (submit){
+            var stat = confirm("Create a Contract Agreement?");
+            if(stat)
+                this.submit();
+        }
+        return false;
+    });
+
+    /* FOR DEMO ONLY */
+    $('#vfields').change(function () {
+        $('form').toggleClass('mode2');
+    }).prop('checked', false);
+
+    $('#alerts').change(function () {
+        validator.defaults.alerts = (this.checked) ? false : true;
+        if (this.checked)
+            $('form .alert').remove();
+    }).prop('checked', false);
+
+    $(document).ready(function () {
+        $(".select2_single").select2({
+            placeholder: "Please Select",
+            allowClear: true,
+            required: "required"
+        });
+        $(".select2_group").select2({});
+        $(".select2_multiple").select2({
+            maximumSelectionLength: 4,
+            placeholder: "With Max Selection limit 4",
+            allowClear: true
+        });
+    });
+
+
+    function number2text(value) {
+        var fraction = Math.round(frac(value) * 100);
+        var f_text = "";
+
+        if (fraction > 0) {
+            f_text = "AND " + convert_number(fraction) + " POYSA";
+        }
+        document.getElementById("in_words").value = convert_number(value) + " TAKA " + f_text + " ONLY";
+    }
+
+
+    function number2text2(value) {
+        var fraction = Math.round(frac(value) * 100);
+        var f_text = "";
+
+        if (fraction > 0) {
+            f_text = "AND " + convert_number(fraction) + " POYSA";
+        }
+        document.getElementById("in_words_2").value = convert_number(value) + " TAKA " + f_text + " ONLY";
+    }
+
+    function frac(f) {
+        return f % 1;
+    }
+
+    function convert_number(number)
+    {
+        if ((number < 0) || (number > 999999999))
+        {
+            return "NUMBER OUT OF RANGE!";
+        }
+        var Gn = Math.floor(number / 10000000);  /* Crore */
+        number -= Gn * 10000000;
+        var kn = Math.floor(number / 100000);     /* lakhs */
+        number -= kn * 100000;
+        var Hn = Math.floor(number / 1000);      /* thousand */
+        number -= Hn * 1000;
+        var Dn = Math.floor(number / 100);       /* Tens (deca) */
+        number = number % 100;               /* Ones */
+        var tn = Math.floor(number / 10);
+        var one = Math.floor(number % 10);
+        var res = "";
+
+        if (Gn > 0)
+        {
+            res += (convert_number(Gn) + " KOTI");
+        }
+        if (kn > 0)
+        {
+            res += (((res == "") ? "" : " ") +
+                    convert_number(kn) + " LAKH");
+        }
+        if (Hn > 0)
+        {
+            res += (((res == "") ? "" : " ") +
+                    convert_number(Hn) + " THOUSAND");
+        }
+
+        if (Dn)
+        {
+            res += (((res == "") ? "" : " ") +
+                    convert_number(Dn) + " HUNDRED");
+        }
+
+
+        var ones = Array("", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN", "FIFTEEN", "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN");
+        var tens = Array("", "", "TWENTY", "THIRTY", "FOURTY", "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY");
+
+        if (tn > 0 || one > 0)
+        {
+            if (!(res == ""))
+            {
+                res += " AND ";
+            }
+            if (tn < 2)
+            {
+                res += ones[tn * 10 + one];
+            }
+            else
+            {
+
+                res += tens[tn];
+                if (one > 0)
+                {
+                    res += ("-" + ones[one]);
+                }
+            }
+        }
+
+        if (res == "")
+        {
+            res = "zero";
+        }
+        return res;
+    }
+</script>
+
+
+

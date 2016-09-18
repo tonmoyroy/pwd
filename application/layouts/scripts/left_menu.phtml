@@ -2,7 +2,9 @@
 $user_name = Zend_Registry::get('USER_NAME');
 $user_type_id = Zend_Registry::get('USER_TYPE_ID');
 $user_id = Zend_Registry::get('USER_ID');
+$fiscal_yr = Zend_Registry::get('FISCAL_YR');
 ?> 
+
 
 <div class="col-md-3 left_col">
     <div class="left_col scroll-view">
@@ -31,7 +33,7 @@ $user_id = Zend_Registry::get('USER_ID');
                                 </li>
                                 <li><a href="<?= $this->baseUrl(); ?>/Admin/proctypemanage">Procurement Nature Management</a>
                                 </li>
-                                
+
                                 <li><a href="<?= $this->baseUrl(); ?>/Admin/procmethodmanage">Procurement Method Management</a>
                                 </li>
                                 <li><a href="<?= $this->baseUrl(); ?>/Admin/approveauthmanage">Approval Authority Management</a>
@@ -54,40 +56,28 @@ $user_id = Zend_Registry::get('USER_ID');
                                 </li> 
                             </ul>
                         </li>
-                        
+
 
 
                     </ul>
                 </div>
-            <?php } else if ($user_type_id == 2 or $user_type_id == 3) { ?>
+            <?php } else if ($user_type_id == 3) { ?>
                 <ul class="nav side-menu">
-                    <li><a><i class="fa fa-user"></i> APP Fiscal Year <span class="fa fa-chevron-down"></span></a>
+                    <li><a a href="<?= $this->baseUrl(); ?>/Staff/createcontractagree"><i class="fa fa-file-text-o"></i>New Contract Agreement</a>
+                    </li>
+
+                    <li><a ><i class="fa fa-user"></i> APP Fiscal Year <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu" style="display: none">
-                            <li><a href="#">2015-2016</a>
-                            </li>
-                            <li><a href="#">2016-2017</a>
-                            </li>
+                            <?php foreach ($fiscal_yr as $year) { ?>
+                                <li><a href="<?= $this->baseUrl(); ?>/Staff/applist?id=<?=$year['FISCAL_YR_ID']?>"><?=$year['START_YEAR']?>-<?=$year['END_YEAR']?></a>
+                                </li>
+                            <?php } ?>
                         </ul>
                     </li>
                     <li><a><i class="fa fa-user-plus"></i> DPP Project <span class="fa fa-chevron-down"></span></a>
 
                     </li>
-                    <li><a><i class="fa fa-user"></i> Health Section <span class="fa fa-chevron-down"></span></a>
-                        <ul class="nav child_menu" style="display: none">
-                            <li><a href="#">2015-2016</a>
-                            </li>
-                            <li><a href="#">2016-2017</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li><a><i class="fa fa-user"></i> Others <span class="fa fa-chevron-down"></span></a>
-                        <ul class="nav child_menu" style="display: none">
-                            <li><a href="#">2015-2016</a>
-                            </li>
-                            <li><a href="#">2016-2017</a>
-                            </li>
-                        </ul>
-                    </li>
+
 
                 </ul>
             <?php } ?>
