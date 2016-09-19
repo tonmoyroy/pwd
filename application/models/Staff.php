@@ -84,16 +84,16 @@ class Application_Model_Staff extends Zend_Db_Table {
     }
     
     
-    public function createContractAgreement($data){
+    public function createContractAgreement($data,$user_id){
         $o_status_code = sprintf('%20f', '');
         $o_status_message = sprintf('%4000s', '');
-
+        $user['p_user_id'] = $user_id;
         $out_parms = array(
             "o_status_code" => &$o_status_code,
             "o_status_message" => &$o_status_message
         );
 
-        $all_data = array_merge($data, $out_parms);
+        $all_data = array_merge($data,$user, $out_parms);
         //print_r ($all_data);exit();
         
         $stmt = new Zend_Db_Statement_Oracle($this->_db, "ALTER SESSION SET NLS_DATE_FORMAT='MM/DD/YYYY'");
@@ -111,6 +111,7 @@ class Application_Model_Staff extends Zend_Db_Table {
            :p_work_value,
            :p_contractor_id,
            :p_sign_date,
+           :p_user_id,
            :o_status_code,
            :o_status_message); END;", $all_data);
 
@@ -178,7 +179,8 @@ class Application_Model_Staff extends Zend_Db_Table {
                 CA.CONTRACTOR_ID,
                 C.NAME,
                 CA.SIGN_DATE,
-                CA.CREATE_DATE
+                CA.CREATE_DATE,
+                CA.FORWARD_BY
            FROM CONTRACT_AGREEMENT CA,
                 L_SECTOR S,
                 CONTRACTOR C,
@@ -199,4 +201,11 @@ class Application_Model_Staff extends Zend_Db_Table {
         return $data;
     }
 
+        public function getPayementMethod(){
+        $sql = "SELECT PAYMENT_METHOD_ID, PAYMENT_METHOD, ACTIVE_YN
+                FROM L_PAYMENT_METHOD
+               WHERE ACTIVE_YN = 'Y'";
+        $data = $this->_db->fetchAll($sql);
+        return $data;
+    }
 }

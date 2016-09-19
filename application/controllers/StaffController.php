@@ -33,6 +33,7 @@ class StaffController extends Zend_Controller_Action {
     }
 
     public function createcontractagreeAction() {
+        $user_id = $this->PWDSession->session_data['user_id'];
         $this->view->sectorlist = $this->staff->getSectorList();
         $this->view->authlist = $this->staff->getAuthorityList();
         $this->view->proclist = $this->staff->getProcList();
@@ -43,24 +44,28 @@ class StaffController extends Zend_Controller_Action {
 
         $postdata = $this->_request->getPost();
         if ($postdata) {
-            $status = $this->staff->createContractAgreement($postdata);
-            if ($status['o_status_code'] == 1)
+            $status = $this->staff->createContractAgreement($postdata,$user_id);
+            if ($status['o_status_code'] == 1) {
                 $this->flashMessenger->addMessage(array('alert-success' => $status['o_status_message']));
-            else
+                $this->_redirect('Staff/showcontractagree?no='.$postdata['p_ca_no']);
+            } else {
                 $this->flashMessenger->addMessage(array('alert-danger' => $status['o_status_message']));
-            $this->_redirect('Staff/createcontractagree');
+                $this->_redirect('Staff/createcontractagree');
+            }
         }
     }
-    
-    public function applistAction(){
+
+    public function applistAction() {
         $getdata = $this->_request->getQuery();
         $this->view->applist = $this->staff->getAppList($getdata['id']);
         $this->view->year = $this->staff->getFiscalYear($getdata['id']);
     }
-    
-    public function showcontractagreeAction(){
+
+    public function showcontractagreeAction() {
         $getdata = $this->_request->getQuery();
         $this->view->appdata = $this->staff->getAppData($getdata['no']);
+        
+        $this->view->paydata = $this->staff->getPayementMethod();
     }
 
 }
