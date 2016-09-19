@@ -23,7 +23,7 @@ class Application_Model_Staff extends Zend_Db_Table {
         //print_r($data);exit;
         return $data;
     }
-    
+
     public function getSectorList() {
         $sql = "SELECT SECTOR_ID,
                 SECTOR_NAME,
@@ -33,7 +33,7 @@ class Application_Model_Staff extends Zend_Db_Table {
         $data = $this->_db->fetchAll($sql);
         return $data;
     }
-    
+
     public function getAuthorityList() {
         $sql = "SELECT USER_TYPE_ID, USER_TYPE_NAME, APPROVE_AUTH
                 FROM L_USER_TYPES
@@ -41,9 +41,8 @@ class Application_Model_Staff extends Zend_Db_Table {
         $data = $this->_db->fetchAll($sql);
         return $data;
     }
-    
-    
-    public function getProcList(){
+
+    public function getProcList() {
         $sql = "SELECT PROC_ID,
                 PROC_TYPE_NAME,
                 ENABLE_YN,
@@ -52,8 +51,8 @@ class Application_Model_Staff extends Zend_Db_Table {
         $data = $this->_db->fetchAll($sql);
         return $data;
     }
-    
-    public function getProcMethodList(){
+
+    public function getProcMethodList() {
         $sql = "SELECT PROC_METHOD_ID,
                 PROC_METHOD_NAME,
                 ACTIVE_YN,
@@ -62,8 +61,8 @@ class Application_Model_Staff extends Zend_Db_Table {
         $data = $this->_db->fetchAll($sql);
         return $data;
     }
-    
-    public function getContractorList(){
+
+    public function getContractorList() {
         $sql = "SELECT 
                 CONTRACTOR_ID, NAME, ADDRESS, 
                    EMAIL, PHONE, ACTIVE_YN, 
@@ -73,8 +72,8 @@ class Application_Model_Staff extends Zend_Db_Table {
         //print_r($data);exit;
         return $data;
     }
-    
-    public function getSubDivList(){
+
+    public function getSubDivList() {
         $sql = "SELECT SUB_DIV_ID, SUB_DIV_NAME, ACTIVE_YN
                 FROM L_SUB_DIV
                WHERE ACTIVE_YN = 'Y' ORDER BY 1";
@@ -82,9 +81,8 @@ class Application_Model_Staff extends Zend_Db_Table {
         //print_r($data);exit;
         return $data;
     }
-    
-    
-    public function createContractAgreement($data,$user_id){
+
+    public function createContractAgreement($data, $user_id) {
         $o_status_code = sprintf('%20f', '');
         $o_status_message = sprintf('%4000s', '');
         $user['p_user_id'] = $user_id;
@@ -93,9 +91,9 @@ class Application_Model_Staff extends Zend_Db_Table {
             "o_status_message" => &$o_status_message
         );
 
-        $all_data = array_merge($data,$user, $out_parms);
+        $all_data = array_merge($data, $user, $out_parms);
         //print_r ($all_data);exit();
-        
+
         $stmt = new Zend_Db_Statement_Oracle($this->_db, "ALTER SESSION SET NLS_DATE_FORMAT='MM/DD/YYYY'");
         $stmt->execute();
 
@@ -118,8 +116,8 @@ class Application_Model_Staff extends Zend_Db_Table {
         //print_r ($all_data);exit();
         return $all_data;
     }
-    
-    public function getAppList($id){
+
+    public function getAppList($id) {
         $sql = "SELECT CA.CA_NO,
                 CA.CA_NAME,
                 CA.SECTOR_ID,
@@ -147,8 +145,8 @@ class Application_Model_Staff extends Zend_Db_Table {
         //print_r($data);exit;
         return $data;
     }
-    
-    public function getFiscalYear($id){
+
+    public function getFiscalYear($id) {
         $sql = "SELECT FISCAL_YR_ID,
                 EXTRACT (YEAR FROM START_DATE) START_YEAR,
                 EXTRACT (YEAR FROM END_DATE) END_YEAR,
@@ -159,9 +157,8 @@ class Application_Model_Staff extends Zend_Db_Table {
         $data = $this->_db->fetchRow($sql);
         return $data;
     }
-    
-    
-    public function getAppData($id){
+
+    public function getAppData($id) {
         $sql = "SELECT CA.CA_NO,
                 CA.CA_NAME,
                 CA.SECTOR_ID,
@@ -201,11 +198,59 @@ class Application_Model_Staff extends Zend_Db_Table {
         return $data;
     }
 
-        public function getPayementMethod(){
+    public function getPayementMethod() {
         $sql = "SELECT PAYMENT_METHOD_ID, PAYMENT_METHOD, ACTIVE_YN
                 FROM L_PAYMENT_METHOD
                WHERE ACTIVE_YN = 'Y'";
         $data = $this->_db->fetchAll($sql);
         return $data;
     }
+    
+    public function createPayment($data){
+        $o_status_code = sprintf('%20f', '');
+        $o_status_message = sprintf('%4000s', '');
+        
+        $out_parms = array(
+            "o_status_code" => &$o_status_code,
+            "o_status_message" => &$o_status_message
+        );
+
+        $all_data = array_merge($data, $out_parms);
+        //print_r ($all_data);exit();
+
+        $stmt = new Zend_Db_Statement_Oracle($this->_db, "ALTER SESSION SET NLS_DATE_FORMAT='MM/DD/YYYY'");
+        $stmt->execute();
+
+        $this->_db->query("BEGIN CREATE_PAYMENT(
+           :p_ca_no,
+           :p_payment_method,
+           :p_bank,
+           :p_branch,
+           :p_payorder,
+           :p_date,
+           :p_amount,
+           :o_status_code,
+           :o_status_message); END;", $all_data);
+
+        //print_r ($all_data);exit();
+        return $all_data;
+    }
+    
+    public function getPaymentInfo() {
+        $sql = "SELECT PAYMENT_ID,
+                CA_NO,
+                PAYMENT_METHOD,
+                BANK_ID,
+                BRANCH,
+                PAYORDER_NO,
+                PAY_DATE,
+                AMOUNT,
+                STATUS
+           FROM PAYMENT
+          WHERE CA_NO = 'CA-111000'
+       ORDER BY PAY_DATE";
+        $data = $this->_db->fetchRow($sql);
+        return $data;
+    }
+
 }

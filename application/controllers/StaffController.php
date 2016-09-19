@@ -44,10 +44,10 @@ class StaffController extends Zend_Controller_Action {
 
         $postdata = $this->_request->getPost();
         if ($postdata) {
-            $status = $this->staff->createContractAgreement($postdata,$user_id);
+            $status = $this->staff->createContractAgreement($postdata, $user_id);
             if ($status['o_status_code'] == 1) {
                 $this->flashMessenger->addMessage(array('alert-success' => $status['o_status_message']));
-                $this->_redirect('Staff/showcontractagree?no='.$postdata['p_ca_no']);
+                $this->_redirect('Staff/showcontractagree?no=' . $postdata['p_ca_no']);
             } else {
                 $this->flashMessenger->addMessage(array('alert-danger' => $status['o_status_message']));
                 $this->_redirect('Staff/createcontractagree');
@@ -63,9 +63,20 @@ class StaffController extends Zend_Controller_Action {
 
     public function showcontractagreeAction() {
         $getdata = $this->_request->getQuery();
+        $this->view->ca_no = $getdata['no'];
         $this->view->appdata = $this->staff->getAppData($getdata['no']);
-        
         $this->view->paydata = $this->staff->getPayementMethod();
+        $this->view->paymentinfo = $payinfo = $this->staff->getPaymentInfo();
+        $postdata = $this->_request->getPost();
+        if ($postdata) {
+            $status = $this->staff->createPayment($postdata);
+            if ($status['o_status_code'] == 1) {
+                $this->flashMessenger->addMessage(array('alert-success' => $status['o_status_message']));
+            } else {
+                $this->flashMessenger->addMessage(array('alert-danger' => $status['o_status_message']));
+            }
+            $this->_redirect('Staff/showcontractagree?no=' . $postdata['p_ca_no']);
+        }
     }
 
 }

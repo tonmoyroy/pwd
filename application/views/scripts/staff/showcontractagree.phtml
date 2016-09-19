@@ -1,3 +1,5 @@
+<?php $paymentinfo = $this->paymentinfo; ?>
+
 <div id="mycontainer"  class="row">
     <div class="col-md-12 col-sm-12 col-xs-12" style="padding-top: 20px" >
         <div class="x_panel">
@@ -12,7 +14,7 @@
                 <div class="clearfix"></div>
             </div>
             <div class="x_content">
-                <form id="form" class="form-horizontal form-label-left" novalidate autocomplete="off" action="<?= $this->baseUrl() ?>/Staff/createcontractagree" method="post">
+                <form id="form" class="form-horizontal form-label-left" novalidate autocomplete="off">
 
                     <div class="item form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" >Enter CA No. <span class="required">*</span>
@@ -119,13 +121,6 @@
                             <input type="text" class="form-control col-md-7 col-xs-12" value="<?= $this->appdata['SIGN_DATE'] ?>" readonly>
                         </div>
                     </div>
-
-                    <div class="ln_solid"></div>
-                    <div class="form-group">
-                        <div class="col-md-6 col-md-offset-3" >
-                            <a href="index" class="btn btn-primary">Back</a>
-                        </div>
-                    </div>
                 </form>
 
             </div>
@@ -145,7 +140,8 @@
                 <div class="clearfix"></div>
             </div>
             <div class="x_content">
-                <form id="form" class="form-horizontal form-label-left" novalidate autocomplete="off" action="<?= $this->baseUrl() ?>/Staff/createcontractagree" method="post">
+                <form id="payment_form" class="form-horizontal form-label-left" novalidate autocomplete="off" action="<?= $this->baseUrl() ?>/Staff/showcontractagree" method="post">
+                    <input type="hidden" name="p_ca_no" value="<?= $this->ca_no ?>">
                     <div class="item form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Select Payment Method <span class="required">*</span>
                         </label>
@@ -154,20 +150,23 @@
                             <select id="select1" class="select2_single form-control" name="p_payment_method" required onchange="payment(this.value)">
                                 <option value="">Please Select</option>
                                 <?php foreach ($this->paydata as $types) { ?>
-                                    <option value="<?= $types['PAYMENT_METHOD_ID'] ?>"><?= $types['PAYMENT_METHOD'] ?></option>
+                                    <option value="<?= $types['PAYMENT_METHOD_ID'] ?>" <?php if ($paymentinfo['PAYMENT_METHOD'] == $types['PAYMENT_METHOD_ID']) echo "selected='selected'"; ?>><?= $types['PAYMENT_METHOD'] ?></option>
                                 <?php } ?>
                             </select>
                         </div>
                     </div>
 
                     <div id="o_payment" class="item form-group">
-                        
+
                     </div>
 
                     <div class="ln_solid"></div>
                     <div class="form-group">
-                        <div class="col-md-6 col-md-offset-3" >
-                            <a href="index" class="btn btn-primary">Back</a>
+                        <div class="col-md-6 col-md-offset-3">
+                            <a href="index" class="btn btn-primary">Cancel</a>
+                            <?php if (!$paymentinfo) {
+                                ?><button id="send" type="submit" class="btn btn-success">Submit</button><?php } else {
+                                ?> <button id="send" type="submit" class="btn btn-success">Update</button><?php } ?>
                         </div>
                     </div>
                 </form>
@@ -180,30 +179,31 @@
 <script type="text/javascript">
 
     window.onload = function () {
-
         number2text(<?= $this->appdata['EST_COST'] ?>);
         number2text2(<?= $this->appdata['WORK_VALUE'] ?>);
-
+        payment(<?= $paymentinfo['PAYMENT_METHOD'] ?>);
     }
 
     $(document).ready(function () {
+
         $(".select2_single").select2({
             placeholder: "Please Select",
             allowClear: true,
             required: "required"
         });
     });
-    
-    
+
+
 
     function payment(pay_method) {
         var link = "<?= $this->baseUrl() ?>/ajax/payment";
+        var total = <?= $this->appdata['WORK_VALUE'] ?>;
         //alert(pay_method);
         jQuery.ajax({
             type: "POST",
             url: link,
-            data: "meth=" + pay_method,
-            async: true,
+            data: "meth=" + pay_method + "&total=" + total,
+            async: false,
             success: function (msg) {
                 jQuery('#o_payment').html(msg);
             }
@@ -306,6 +306,8 @@
         }
         return res;
     }
+
+
 </script>
 
 
