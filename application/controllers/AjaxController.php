@@ -35,8 +35,9 @@ class AjaxController extends Zend_Controller_Action
         $this->_helper->layout->disableLayout();
         $this->view->pay_method =$pay_meth= $this->_request->getPost('meth');
         $this->view->total =$total= $this->_request->getPost('total');
+        $this->view->ca_no =$ca_no =$this->_request->getPost('ca_no');
         $this->view->bank = $this->ajax->getBanks();
-        $this->view->paymentinfo = $payinfo = $this->ajax->getPaymentInfo();
+        $this->view->paymentinfo = $payinfo = $this->ajax->getPaymentInfo($ca_no);
        
     }
 

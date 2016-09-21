@@ -117,30 +117,110 @@ class Application_Model_Staff extends Zend_Db_Table {
         return $all_data;
     }
 
-    public function getAppList($id) {
-        $sql = "SELECT CA.CA_NO,
-                CA.CA_NAME,
-                CA.SECTOR_ID,
-                S.SECTOR_NAME,
-                CA.SUB_DIV_ID,
-                CA.EST_COST,
-                CA.AUTH_ID,
-                CA.PROC_TYPE_ID,
-                CA.PROC_METH_ID,
-                CA.WORK_VALUE,
-                CA.CONTRACTOR_ID,
-                C.NAME,
-                CA.SIGN_DATE,
-                CA.CREATE_DATE
-           FROM CONTRACT_AGREEMENT CA,
-                (SELECT START_DATE, END_DATE
-                   FROM L_FISCAL_YEAR
-                  WHERE FISCAL_YR_ID = $id) FISCAL_YR,
-                L_SECTOR S,
-                CONTRACTOR C
-          WHERE     CA.CREATE_DATE BETWEEN FISCAL_YR.START_DATE AND FISCAL_YR.END_DATE
-                AND CA.SECTOR_ID = S.SECTOR_ID
-                AND CA.CONTRACTOR_ID = C.CONTRACTOR_ID ORDER BY CA.CA_NO";
+    public function getAppList($id,$user_type) {
+//        $sql = "SELECT CA.CA_NO,
+//                CA.CA_NAME,
+//                CA.SECTOR_ID,
+//                S.SECTOR_NAME,
+//                CA.SUB_DIV_ID,
+//                CA.EST_COST,
+//                CA.AUTH_ID,
+//                CA.PROC_TYPE_ID,
+//                CA.PROC_METH_ID,
+//                CA.WORK_VALUE,
+//                CA.CONTRACTOR_ID,
+//                C.NAME,
+//                CA.SIGN_DATE,
+//                CA.CREATE_DATE
+//           FROM CONTRACT_AGREEMENT CA,
+//                (SELECT START_DATE, END_DATE
+//                   FROM L_FISCAL_YEAR
+//                  WHERE FISCAL_YR_ID = $id) FISCAL_YR,
+//                L_SECTOR S,
+//                CONTRACTOR C
+//          WHERE     CA.CREATE_DATE BETWEEN FISCAL_YR.START_DATE AND FISCAL_YR.END_DATE
+//                AND CA.SECTOR_ID = S.SECTOR_ID
+//                AND CA.CONTRACTOR_ID = C.CONTRACTOR_ID ORDER BY CA.CA_NO";
+        
+        $sql = "SELECT *
+  FROM (  SELECT CA.CA_NO,
+                 CA.CA_NAME,
+                 CA.SECTOR_ID,
+                 S.SECTOR_NAME,
+                 CA.SUB_DIV_ID,
+                 CA.EST_COST,
+                 CA.AUTH_ID,
+                 CA.PROC_TYPE_ID,
+                 CA.PROC_METH_ID,
+                 CA.WORK_VALUE,
+                 CA.CONTRACTOR_ID,
+                 C.NAME,
+                 CA.SIGN_DATE,
+                 CA.CREATE_DATE,
+                 CURR_STAGE.STAGE,
+                 LW.USER_TYPE
+            FROM CONTRACT_AGREEMENT CA,
+                 (SELECT START_DATE, END_DATE
+                    FROM L_FISCAL_YEAR
+                   WHERE FISCAL_YR_ID = 1) FISCAL_YR,
+                 (  SELECT MIN (STAGE) STAGE, CA_NO
+                      FROM WORKFLOW W
+                     WHERE STATUS = 'N'
+                  GROUP BY CA_NO) CURR_STAGE,
+                 L_SECTOR S,
+                 CONTRACTOR C,
+                 L_WORKFLOW LW
+           WHERE     CA.CREATE_DATE BETWEEN FISCAL_YR.START_DATE
+                                        AND FISCAL_YR.END_DATE
+                 AND CA.SECTOR_ID = S.SECTOR_ID
+                 AND CA.CONTRACTOR_ID = C.CONTRACTOR_ID
+                 AND CA.CA_NO = CURR_STAGE.CA_NO
+                 AND LW.STAGE_ID = CURR_STAGE.STAGE
+        ORDER BY CA.CA_NO) TAB
+ WHERE TAB.USER_TYPE = $user_type";
+        $data = $this->_db->fetchAll($sql);
+        //print_r($data);exit;
+        return $data;
+    }
+    
+    
+    public function getfnAppList($id,$user_type) {
+        
+        $sql = "SELECT *
+  FROM (  SELECT CA.CA_NO,
+                 CA.CA_NAME,
+                 CA.SECTOR_ID,
+                 S.SECTOR_NAME,
+                 CA.SUB_DIV_ID,
+                 CA.EST_COST,
+                 CA.AUTH_ID,
+                 CA.PROC_TYPE_ID,
+                 CA.PROC_METH_ID,
+                 CA.WORK_VALUE,
+                 CA.CONTRACTOR_ID,
+                 C.NAME,
+                 CA.SIGN_DATE,
+                 CA.CREATE_DATE,
+                 APPROVED.STAGE,
+                 LW.USER_TYPE
+            FROM CONTRACT_AGREEMENT CA,
+                 (SELECT START_DATE, END_DATE
+                    FROM L_FISCAL_YEAR
+                   WHERE FISCAL_YR_ID = 1) FISCAL_YR,
+                 (  SELECT STAGE, CA_NO
+    FROM WORKFLOW W
+   WHERE STATUS = 'Y') APPROVED,
+                 L_SECTOR S,
+                 CONTRACTOR C,
+                 L_WORKFLOW LW
+           WHERE     CA.CREATE_DATE BETWEEN FISCAL_YR.START_DATE
+                                        AND FISCAL_YR.END_DATE
+                 AND CA.SECTOR_ID = S.SECTOR_ID
+                 AND CA.CONTRACTOR_ID = C.CONTRACTOR_ID
+                 AND CA.CA_NO = APPROVED.CA_NO
+                 AND LW.STAGE_ID = APPROVED.STAGE
+        ORDER BY CA.CA_NO) TAB
+ WHERE TAB.USER_TYPE = $user_type";
         $data = $this->_db->fetchAll($sql);
         //print_r($data);exit;
         return $data;
@@ -221,7 +301,8 @@ class Application_Model_Staff extends Zend_Db_Table {
         $stmt = new Zend_Db_Statement_Oracle($this->_db, "ALTER SESSION SET NLS_DATE_FORMAT='MM/DD/YYYY'");
         $stmt->execute();
 
-        $this->_db->query("BEGIN CREATE_PAYMENT(
+        $this->_db->query("BEGIN CREATE_UPDATE_PAYMENT(
+           :p_payment_id,
            :p_ca_no,
            :p_payment_method,
            :p_bank,
@@ -236,21 +317,73 @@ class Application_Model_Staff extends Zend_Db_Table {
         return $all_data;
     }
     
-    public function getPaymentInfo() {
-        $sql = "SELECT PAYMENT_ID,
-                CA_NO,
-                PAYMENT_METHOD,
-                BANK_ID,
-                BRANCH,
-                PAYORDER_NO,
-                PAY_DATE,
-                AMOUNT,
-                STATUS
-           FROM PAYMENT
-          WHERE CA_NO = 'CA-111000'
+    public function getPaymentInfo($ca_no) {
+        $sql = "SELECT P.PAYMENT_ID,
+                P.CA_NO,
+                P.PAYMENT_METHOD,
+                PM.PAYMENT_METHOD PAYMENT_METHOD_NAME,
+                P.BANK_ID,
+                B.BANK_NAME,
+                P.BRANCH,
+                P.PAYORDER_NO,
+                P.PAY_DATE,
+                P.AMOUNT,
+                P.STATUS
+           FROM PAYMENT P, BANK B, L_PAYMENT_METHOD PM
+          WHERE     CA_NO = '$ca_no'
+                AND P.BANK_ID = B.BANK_ID
+                AND P.PAYMENT_METHOD = PM.PAYMENT_METHOD_ID
        ORDER BY PAY_DATE";
+        //echo $sql;exit;
         $data = $this->_db->fetchRow($sql);
         return $data;
+    }
+    
+    
+    public function getAllPaymentInfo($ca_no) {
+        $sql = "SELECT P.PAYMENT_ID,
+                P.CA_NO,
+                P.PAYMENT_METHOD,
+                PM.PAYMENT_METHOD PAYMENT_METHOD_NAME,
+                P.BANK_ID,
+                B.BANK_NAME,
+                P.BRANCH,
+                P.PAYORDER_NO,
+                P.PAY_DATE,
+                P.AMOUNT,
+                P.STATUS
+           FROM PAYMENT P, BANK B, L_PAYMENT_METHOD PM
+          WHERE     CA_NO = '$ca_no'
+                AND P.BANK_ID = B.BANK_ID
+                AND P.PAYMENT_METHOD = PM.PAYMENT_METHOD_ID
+       ORDER BY PAY_DATE";
+        //echo $sql;exit;
+        $data = $this->_db->fetchAll($sql);
+        return $data;
+    }
+    
+    public function finalizeSecurityPayment($ca_no,$p_id){
+        $o_status_code = sprintf('%20f', '');
+        $o_status_message = sprintf('%4000s', '');
+        
+        $out_parms = array(
+            "o_status_code" => &$o_status_code,
+            "o_status_message" => &$o_status_message
+        );
+
+        $data['p_payment_id'] =$p_id ;
+        $data['p_ca_no'] = $ca_no;
+        $all_data = array_merge($data, $out_parms);
+        //print_r ($all_data);exit();
+
+        $this->_db->query("BEGIN FINALIZE_PAYMENT(
+           :p_payment_id,
+           :p_ca_no,
+           :o_status_code,
+           :o_status_message); END;", $all_data);
+
+        //print_r ($all_data);exit();
+        return $all_data;
     }
 
 }

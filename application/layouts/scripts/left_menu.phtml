@@ -66,10 +66,72 @@ $fiscal_yr = Zend_Registry::get('FISCAL_YR');
                     <li><a a href="<?= $this->baseUrl(); ?>/Staff/createcontractagree"><i class="fa fa-file-text-o"></i>New Contract Agreement</a>
                     </li>
 
-                    <li><a ><i class="fa fa-user"></i> APP Fiscal Year <span class="fa fa-chevron-down"></span></a>
+                    <li><a ><i class="fa fa-user"></i> Pending APP <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu" style="display: none">
                             <?php foreach ($fiscal_yr as $year) { ?>
-                                <li><a href="<?= $this->baseUrl(); ?>/Staff/applist?id=<?=$year['FISCAL_YR_ID']?>"><?=$year['START_YEAR']?>-<?=$year['END_YEAR']?></a>
+                                <li><a href="<?= $this->baseUrl(); ?>/Staff/applist?id=<?= $year['FISCAL_YR_ID'] ?>">FISCAL YEAR:<?= $year['START_YEAR'] ?>-<?= $year['END_YEAR'] ?></a>
+                                </li>
+                            <?php } ?>
+                        </ul>
+                    </li>
+                    
+                    <li><a ><i class="fa fa-user"></i> Approved APP <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu" style="display: none">
+                            <?php foreach ($fiscal_yr as $year) { ?>
+                                <li><a href="<?= $this->baseUrl(); ?>/Staff/fnapplist?id=<?= $year['FISCAL_YR_ID'] ?>">FISCAL YEAR:<?= $year['START_YEAR'] ?>-<?= $year['END_YEAR'] ?></a>
+                                </li>
+                            <?php } ?>
+                        </ul>
+                    </li>
+                    
+                    <li><a><i class="fa fa-user-plus"></i> DPP Project <span class="fa fa-chevron-down"></span></a>
+
+                    </li>
+
+
+                </ul>
+            <?php } else if ($user_type_id == 4) { ?>
+                <ul class="nav side-menu">
+
+                    <li><a ><i class="fa fa-user"></i> Pending APP <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu" style="display: none">
+                            <?php foreach ($fiscal_yr as $year) { ?>
+                                <li><a href="<?= $this->baseUrl(); ?>/Staff/applist?id=<?= $year['FISCAL_YR_ID'] ?>">FISCAL YEAR:<?= $year['START_YEAR'] ?>-<?= $year['END_YEAR'] ?></a>
+                                </li>
+                            <?php } ?>
+                        </ul>
+                    </li>
+                    
+                    <li><a ><i class="fa fa-user"></i> Approved APP <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu" style="display: none">
+                            <?php foreach ($fiscal_yr as $year) { ?>
+                                <li><a href="<?= $this->baseUrl(); ?>/Staff/fnapplist?id=<?= $year['FISCAL_YR_ID'] ?>">FISCAL YEAR:<?= $year['START_YEAR'] ?>-<?= $year['END_YEAR'] ?></a>
+                                </li>
+                            <?php } ?>
+                        </ul>
+                    </li>
+                    <li><a><i class="fa fa-user-plus"></i> DPP Project <span class="fa fa-chevron-down"></span></a>
+
+                    </li>
+
+
+                </ul>
+            <?php } else if ($user_type_id == 2) { ?>
+                <ul class="nav side-menu">
+
+                    <li><a ><i class="fa fa-user"></i> Pending APP <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu" style="display: none">
+                            <?php foreach ($fiscal_yr as $year) { ?>
+                                <li><a href="<?= $this->baseUrl(); ?>/Staff/applist?id=<?= $year['FISCAL_YR_ID'] ?>">FISCAL YEAR:<?= $year['START_YEAR'] ?>-<?= $year['END_YEAR'] ?></a>
+                                </li>
+                            <?php } ?>
+                        </ul>
+                    </li>
+                    
+                    <li><a ><i class="fa fa-user"></i> Approved APP <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu" style="display: none">
+                            <?php foreach ($fiscal_yr as $year) { ?>
+                                <li><a href="<?= $this->baseUrl(); ?>/Staff/fnapplist?id=<?= $year['FISCAL_YR_ID'] ?>">FISCAL YEAR:<?= $year['START_YEAR'] ?>-<?= $year['END_YEAR'] ?></a>
                                 </li>
                             <?php } ?>
                         </ul>

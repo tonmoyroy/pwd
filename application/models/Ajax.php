@@ -11,7 +11,7 @@ class Application_Model_Ajax extends Zend_Db_Table {
         return $data;
     }
 
-    public function getPaymentInfo() {
+    public function getPaymentInfo($ca_no) {
         $sql = "SELECT PAYMENT_ID,
                 CA_NO,
                 PAYMENT_METHOD,
@@ -22,9 +22,10 @@ class Application_Model_Ajax extends Zend_Db_Table {
                 AMOUNT,
                 STATUS
            FROM PAYMENT
-          WHERE CA_NO = 'CA-111000'
+          WHERE CA_NO = '$ca_no'
        ORDER BY PAY_DATE";
         $data = $this->_db->fetchRow($sql);
+        //echo $sql;exit;
         return $data;
     }
 
