@@ -127,6 +127,10 @@
         </div>
     </div>
 
+    <div id="o_view_file" class="item form-group">
+
+    </div>
+
     <div class="col-md-12 col-sm-12 col-xs-12" style="padding-top: 20px" >
         <div class="x_panel">
             <div class="x_title">
@@ -229,11 +233,12 @@
 
                     <?php } ?>
 
-
                 </form>
             </div>
         </div>
     </div>
+
+
 
 </div>
 
@@ -243,6 +248,7 @@
         number2text(<?= $this->appdata['EST_COST'] ?>);
         number2text2(<?= $this->appdata['WORK_VALUE'] ?>);
         payment(<?= $paymentinfo['PAYMENT_METHOD'] ?>);
+        loadPage();
     }
 
     $(document).ready(function () {
@@ -253,9 +259,23 @@
             required: "required"
         });
     });
-
-
-
+    
+    
+    function loadPage(){
+        var ca_no = document.getElementById('ca_no').value;
+        var link = "<?= $this->baseUrl() ?>/ajax/uploadfile";
+        
+        $.ajax({
+            type: "POST",
+            url: link,
+            data: "ca_no=" + ca_no,
+            async: false,
+            success: function (msg) {
+                jQuery('#o_view_file').html(msg);
+            }
+        });
+    }
+    
     function payment(pay_method) {
         var link = "<?= $this->baseUrl() ?>/ajax/payment";
         var total = <?= $this->appdata['WORK_VALUE']; ?>;
