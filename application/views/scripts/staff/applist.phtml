@@ -36,9 +36,11 @@
                                 <td style="text-align:center"><?= $app['SECTOR_NAME'] ?></td>
                                 <?php if ($this->user_type == 2) { ?>
                                     <td style="text-align:center"><a style="color: blue" href="billcontractagree?no=<?= $app['CA_NO'] ?>"><?= $app['CA_NAME'] ?></a></td>
-                                <?php } else { ?>
+                                <?php } elseif($this->user_type == 3) { ?>
                                     <td style="text-align:center"><a style="color: blue" href="showcontractagree?no=<?= $app['CA_NO'] ?>"><?= $app['CA_NAME'] ?></a></td>
-                                <?php } ?>
+                                <?php } elseif($this->user_type == 4) {?>
+                                    <td style="text-align:center"><a style="color: blue" href="divaccbill?no=<?= $app['CA_NO'] ?>"><?= $app['CA_NAME'] ?></a></td>
+                                <?php }?>
                                 <td style="text-align:right"><?= number_format($app['EST_COST']) ?></td>
                                 <td style="text-align:right"><?= number_format($app['WORK_VALUE']) ?></td>
                                 <td style="text-align:center"><a style="color: blue" href="showcontractor?no=<?= $app['CONTRACTOR_ID'] ?>"><?= $app['NAME'] ?></a></td>

@@ -94,7 +94,7 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Work Order Value <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input type="text" class="form-control col-md-7 col-xs-12" value="<?= $this->appdata['WORK_VALUE'] ?>" readonly>
+                            <input id="work_value" type="text" class="form-control col-md-7 col-xs-12" value="<?= $this->appdata['WORK_VALUE'] ?>" readonly>
                         </div>
                     </div>
 
@@ -125,9 +125,7 @@
 
             </div>
         </div>
-    </div>
 
-    <div id="o_view_file" class="item form-group">
 
     </div>
 
@@ -145,92 +143,67 @@
             </div>
             <div class="x_content">
 
-                <form id="payment_form" class="form-horizontal form-label-left" novalidate autocomplete="off" action="<?= $this->baseUrl() ?>/Staff/showcontractagree" method="post">
-                    <input type="hidden" name="p_payment_id" value="<?= $this->paymentinfo['PAYMENT_ID'] ?>">
-                    <input type="hidden" name="p_ca_no" value="<?= $this->ca_no ?>">
-                    <?php if (!$paymentinfo['STATUS'] or $paymentinfo['STATUS']=='N') { ?>
-                        <div class="item form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Select Payment Method <span class="required">*</span>
-                            </label>
+                <form class="form-horizontal form-label-left" novalidate autocomplete="off" >
 
-                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                <select id="select1"<?php if ($paymentinfo['PAYMENT_METHOD']) { ?> readonly<?php } ?> class="select2_single form-control" name="p_payment_method" required onchange="payment(this.value)">
-                                    <option value="">Please Select</option>
-                                    <?php foreach ($this->paydata as $types) { ?>
-                                        <option value="<?= $types['PAYMENT_METHOD_ID'] ?>" <?php if ($paymentinfo['PAYMENT_METHOD'] == $types['PAYMENT_METHOD_ID']) echo "selected='selected'"; ?>><?= $types['PAYMENT_METHOD'] ?></option>
-                                    <?php } ?>
-                                </select>
-                            </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Select Payment Method <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input class="form-control col-md-7 col-xs-12" readonly value="<?= $paymentinfo['PAYMENT_METHOD_NAME'] ?>" required="required" type="text">
                         </div>
-
-                        <div id="o_payment" class="item form-group">
-
+                    </div>
+                    <div class="item form-group">    
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Bank <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input class="form-control col-md-7 col-xs-12" readonly value="<?= $paymentinfo['BANK_NAME'] ?>" required="required" type="text">
                         </div>
+                    </div>
+                    <div class="item form-group">    
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Branch <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input class="form-control col-md-7 col-xs-12" readonly value="<?= $paymentinfo['BRANCH'] ?>" required="required" type="text">
+                        </div>
+                    </div>
+                    <div class="item form-group">    
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Performance Security No. <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input class="form-control col-md-7 col-xs-12" readonly value="<?= $paymentinfo['PAYORDER_NO'] ?>" required="required" type="text">
+                        </div>
+                    </div>
+                    <div class="item form-group">    
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Date <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input class="form-control col-md-7 col-xs-12" readonly value="<?= $paymentinfo['PAY_DATE'] ?>" required="required" type="text">
+                        </div>
+                    </div>
+                    <div class="item form-group">    
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Amount <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input class="form-control col-md-7 col-xs-12" readonly value="<?= $paymentinfo['AMOUNT'] ?>" required="required" type="text">
+                        </div>
+                    </div>
 
-                        <div class="ln_solid"></div>
+                    <?php if ($paymentinfo['STATUS'] == 'N') { ?>
+<!--                        <div class="ln_solid"></div>
+
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-3">
-                                <a href="index" class="btn btn-primary">Cancel</a>
-                                <?php if (!$paymentinfo) {
-                                    ?><button id="send" type="submit" class="btn btn-success">Submit</button><?php } else {
-                                    ?> <button id="send" type="submit" class="btn btn-success">Update</button><?php } ?>
-                            </div>
-                        </div>
-                    <?php } else { ?>
-                        <div class="item form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Select Payment Method <span class="required">*</span>
-                            </label>
-                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input class="form-control col-md-7 col-xs-12" readonly value="<?= $paymentinfo['PAYMENT_METHOD_NAME'] ?>" required="required" type="text">
-                            </div>
-                        </div>
-                        <div class="item form-group">    
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Bank <span class="required">*</span>
-                            </label>
-                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input class="form-control col-md-7 col-xs-12" readonly value="<?= $paymentinfo['BANK_NAME'] ?>" required="required" type="text">
-                            </div>
-                        </div>
-                        <div class="item form-group">    
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Branch <span class="required">*</span>
-                            </label>
-                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input class="form-control col-md-7 col-xs-12" readonly value="<?= $paymentinfo['BRANCH'] ?>" required="required" type="text">
-                            </div>
-                        </div>
-                        <div class="item form-group">    
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Performance Security No. <span class="required">*</span>
-                            </label>
-                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input class="form-control col-md-7 col-xs-12" readonly value="<?= $paymentinfo['PAYORDER_NO'] ?>" required="required" type="text">
-                            </div>
-                        </div>
-                        <div class="item form-group">    
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Date <span class="required">*</span>
-                            </label>
-                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input class="form-control col-md-7 col-xs-12" readonly value="<?= $paymentinfo['PAY_DATE'] ?>" required="required" type="text">
-                            </div>
-                        </div>
-                        <div class="item form-group">    
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Amount <span class="required">*</span>
-                            </label>
-                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input class="form-control col-md-7 col-xs-12" readonly value="<?= $paymentinfo['AMOUNT'] ?>" required="required" type="text">
-                            </div>
-                        </div>
+                                <a href="index" class="btn btn-primary">Back</a>
 
-                        
+                                <a href="showcontractagree?no=<?= $this->ca_no ?>&pay_id=<?= $paymentinfo['PAYMENT_ID'] ?>" class="btn btn-success">Finalize</a>
 
+                            </div>
+                        </div>-->
                     <?php } ?>
-
                 </form>
             </div>
         </div>
     </div>
-
-
-
 </div>
 
 <script type="text/javascript">
@@ -238,50 +211,94 @@
     window.onload = function () {
         number2text(<?= $this->appdata['EST_COST'] ?>);
         number2text2(<?= $this->appdata['WORK_VALUE'] ?>);
-        payment(<?= $paymentinfo['PAYMENT_METHOD'] ?>);
-        loadPage();
     }
+
+
 
     $(document).ready(function () {
-
-        $(".select2_single").select2({
-            placeholder: "Please Select",
-            allowClear: true,
-            required: "required"
+        $('#datatable').dataTable();
+        $('#datatable-keytable').DataTable({
+            keys: true
+        });
+        $('#datatable-responsive').DataTable();
+        $('#datatable-scroller').DataTable({
+            ajax: "js/datatables/json/scroller-demo.json",
+            deferRender: true,
+            scrollY: 380,
+            scrollCollapse: true,
+            scroller: true
+        });
+        var table = $('#datatable-fixed-header').DataTable({
+            fixedHeader: true
         });
     });
-    
-    
-    function loadPage(){
-        var ca_no = document.getElementById('ca_no').value;
-        var link = "<?= $this->baseUrl() ?>/ajax/uploadfile";
-        
-        $.ajax({
-            type: "POST",
-            url: link,
-            data: "ca_no=" + ca_no,
-            async: false,
-            success: function (msg) {
-                jQuery('#o_view_file').html(msg);
-            }
-        });
-    }
-    
-    function payment(pay_method) {
-        var link = "<?= $this->baseUrl() ?>/ajax/payment";
-        var total = <?= $this->appdata['WORK_VALUE']; ?>;
-        var ca_no = document.getElementById('ca_no').value;
+    TableManageButtons.init();
 
-        jQuery.ajax({
-            type: "POST",
-            url: link,
-            data: "meth=" + pay_method + "&total=" + total + "&ca_no=" + ca_no,
-            async: false,
-            success: function (msg) {
-                jQuery('#o_payment').html(msg);
-            }
-        });
 
+//    $('form').submit(function (e) {
+//        e.preventDefault();
+//        var submit = true;
+//
+//        if (!document.getElementById('method').value) {
+//            alert('Enter a Method');
+//            submit = false;
+//            return false;
+//        }
+//
+//        if (!document.getElementById('p_bill_amt').value) {
+//            alert('Enter Bill Amount');
+//            submit = false;
+//            return false;
+//        }
+//        alert("HI");
+//        //submit = checkvalue(document.getElementById('p_bill_amt').value);
+//        if (!submit)
+//            return false;
+//
+//        if (submit) {
+//            var stat = confirm("Create a Contract Agreement?");
+//            if (stat)
+//                this.submit();
+//        }
+//        return false;
+//    });
+
+
+    function checkvalue(amt) {
+        var submit = true;
+        var method = document.getElementById("method").value;
+        var total = document.getElementById("work_value").value;
+        var due_amt = <?= $this->appdata['WORK_VALUE'] - $this->total_amt ?>;
+        var due_prcnt = document.getElementById("due_prcnt").value;
+        if (!method)
+            alert("Please Select a Method");
+
+        if (method == 1)
+        {
+            if (parseInt(amt) <= 5) {
+                alert("WARNING::New Bill Must Be Greater Than 5% of Work Order Value");
+                submit = false;
+            }
+            if (parseInt(amt) > parseInt(due_prcnt)) {
+                alert("WARNING::New Bill Must Be Less Than Less Than Due Percentage");
+                submit = false;
+            }
+
+            document.getElementById("conf_amt").value = total * (amt / 100);
+
+        } else {
+            var percent = (amt / total) * 100;
+            if (parseInt(percent) <= 5) {
+                alert("WARNING::New Bill Must Be Greater Than 5% of Work Order Value");
+                submit = false;
+            }
+            if (parseInt(amt) > parseInt(due_amt)) {
+                alert("WARNING::New Bill Must Be Less Than Less Than Due Amount");
+                submit = false;
+            }
+            document.getElementById("conf_amt").value = amt;
+        }
+        return submit;
     }
 
     function number2text(value) {

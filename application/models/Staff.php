@@ -362,6 +362,22 @@ class Application_Model_Staff extends Zend_Db_Table {
         return $data;
     }
     
+    
+    public function getBillPayment($ca_no) {
+        $sql = "SELECT CA_NO,
+                MB_NO,
+                MB_PG_NO,
+                MB_DATE,
+                AMOUNT,
+                STATUS
+           FROM PWD.BILL
+          WHERE CA_NO = '$ca_no'
+       ORDER BY MB_DATE";
+        //echo $sql;exit;
+        $data = $this->_db->fetchAll($sql);
+        return $data;
+    }
+    
     public function finalizeSecurityPayment($ca_no,$p_id){
         $o_status_code = sprintf('%20f', '');
         $o_status_message = sprintf('%4000s', '');
@@ -379,6 +395,28 @@ class Application_Model_Staff extends Zend_Db_Table {
         $this->_db->query("BEGIN FINALIZE_PAYMENT(
            :p_payment_id,
            :p_ca_no,
+           :o_status_code,
+           :o_status_message); END;", $all_data);
+
+        //print_r ($all_data);exit();
+        return $all_data;
+    }
+    
+    public function createNewBill($data){
+        $o_status_code = sprintf('%20f', '');
+        $o_status_message = sprintf('%4000s', '');
+        
+        $out_parms = array(
+            "o_status_code" => &$o_status_code,
+            "o_status_message" => &$o_status_message
+        );
+
+        $all_data = array_merge($data, $out_parms);
+        //print_r ($all_data);exit();
+
+        $this->_db->query("BEGIN CREATE_NEW_BILL(
+           :p_ca_no,
+           :p_amount,
            :o_status_code,
            :o_status_message); END;", $all_data);
 

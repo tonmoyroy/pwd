@@ -46,13 +46,6 @@
                     <button type="submit" id="upload" class="btn btn-success">Submit</button>
                 </div>
             </div>
-
-            <div id="o_view_file_out" class="item form-group">
-
-            </div>
-
-
-
         </div>
     </div>
 </div>
@@ -80,7 +73,7 @@
             data: form_data,
             type: 'post',
             success: function (msg) {
-                location.reload();
+                document.location.reload(); 
             }
         });
     });

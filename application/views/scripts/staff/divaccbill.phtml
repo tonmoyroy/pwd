@@ -188,7 +188,18 @@
                         </div>
                     </div>
 
-                    
+
+                    <div class="ln_solid"></div>
+
+                    <div class="form-group">
+                        <div class="col-md-6 col-md-offset-3">
+                            <a href="index" class="btn btn-primary">Back</a>
+                            <?php if ($paymentinfo['STATUS'] == 'N') { ?>
+                                <a href="divaccbill?no=<?= $this->ca_no ?>&pay_id=<?= $paymentinfo['PAYMENT_ID'] ?>" class="btn btn-success">Finalize</a>
+                            <?php } ?>
+                        </div>
+                    </div>
+
                 </form>
             </div>
         </div>
@@ -202,8 +213,8 @@
             <div class="x_title">
                 <h2>Payment History [<?= $this->ca_no ?>]</h2>
                 <ul class="nav navbar-right panel_toolbox">
-                    <?php if ($this->user_type == 2) { ?><li>
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">Make New Payment</button>
+                    <?php if ($this->user_type == 4) { ?><li>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">Finalize Bill</button>
 
                             <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
                                 <div class="modal-dialog modal-lg">
@@ -212,53 +223,36 @@
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
                                             </button>
-                                            <h4 class="modal-title" id="myModalLabel" style="color:red">New Bill Payment</h4>
+                                            <h4 class="modal-title" id="myModalLabel" style="color:red">Finalize Bill</h4>
                                         </div>
                                         <form id="form" class="form-horizontal form-label-left" novalidate autocomplete="off" action="<?= $this->baseUrl() ?>/Staff/billcontractagree" method="post">
                                             <div class="modal-body">
                                                 <input type="hidden" name="p_ca_no" value="<?= $this->appdata['CA_NO'] ?>">
+
                                                 <div class="item form-group">
-                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Remaining Amount
+                                                    <label class="control-label col-md-4 col-sm-4 col-xs-12">Measurement Book(MB) No. <span class="required">*</span>
                                                     </label>
                                                     <div class="col-md-6 col-sm-6 col-xs-12">
-                                                        <input id="due_amt" type="text" readonly value="<?= number_format($this->appdata['WORK_VALUE'] - $this->total_amt); ?>" class="form-control col-md-7 col-xs-12">
+                                                        <input type="text" name="p_mb_no" placeholder="Please Enter Measurement Book(MB) No." required="required" class="form-control col-md-7 col-xs-12">
                                                     </div>
                                                 </div>
 
                                                 <div class="item form-group">
-                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Remaining Percentage(%)
+                                                    <label class="control-label col-md-4 col-sm-4 col-xs-12" for="email">Measurement Book(MB) Page No.<span class="required">*</span>
                                                     </label>
                                                     <div class="col-md-6 col-sm-6 col-xs-12">
-                                                        <input id="due_prcnt" type="text" readonly value="<?= (($this->appdata['WORK_VALUE'] - $this->total_amt) / $this->appdata['WORK_VALUE']) * 100; ?>" class="form-control col-md-7 col-xs-12">
+                                                        <input type="text" name="p_mb_pg_no" placeholder="Please Enter Measurement Book(MB) Page No." required="required"  class="form-control col-md-7 col-xs-12">
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Select a Method <span class="required">*</span></label>
+                                                    <label class="control-label col-md-4 col-sm-4 col-xs-12">Date <span class="required">*</span>
+                                                    </label>
                                                     <div class="col-md-6 col-sm-6 col-xs-12">
-                                                        <select id="method" class="form-control">
-                                                            <option value="">Please Select</option>
-                                                            <option value="1">Percentage</option>
-                                                            <option value="2">Figure</option>
-                                                        </select>
+                                                        <input id="birthday" type="date"  class="date-picker form-control col-md-7 col-xs-12" placeholder="Enter Date" name="p_date" required="required">
                                                     </div>
                                                 </div>
 
-                                                <div class="item form-group">
-                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Enter Value <span class="required">*</span>
-                                                    </label>
-                                                    <div class="col-md-6 col-sm-6 col-xs-12">
-                                                        <input type="number"  onblur="checkvalue(this.value)" placeholder="Please Enter Value" required="required" class="form-control col-md-7 col-xs-12">
-                                                    </div>
-                                                </div>
-
-                                                <div class="item form-group">
-                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Confirm Bill Amount
-                                                    </label>
-                                                    <div class="col-md-6 col-sm-6 col-xs-12">
-                                                        <input id="conf_amt" type="text" name="p_amount" readonly  class="form-control col-md-7 col-xs-12">
-                                                    </div>
-                                                </div>
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -329,14 +323,14 @@
                         <tr><td style="text-align:right" colspan="4"><b>CUMULATIVE :</b></td>
                             <td style="text-align:right"><?= number_format($sum2) ?>.৳</td>
                             <td style="text-align:center"><?= number_format($sum) . "%" ?></td>
-                            <td style="text-align:center"></td>
+                            <td ></td>
 
                         </tr>
 
                         <tr><td style="text-align:right" colspan="4"><b>REMAINING :</b></td>
                             <td style="text-align:right"><?= number_format($this->appdata['WORK_VALUE'] - $sum2) ?>.৳</td>
                             <td style="text-align:center"><?= number_format(100 - $sum) . "%" ?></td>
-                            <td style="text-align:center"></td>
+                            <td ></td>
 
                         </tr>
                     </tbody>
@@ -354,6 +348,12 @@
         number2text(<?= $this->appdata['EST_COST'] ?>);
         number2text2(<?= $this->appdata['WORK_VALUE'] ?>);
     }
+
+    $(function () {
+        $('#datetimepicker1').datetimepicker({
+            language: 'pt-BR'
+        });
+    });
 
 
     $(document).ready(function () {
