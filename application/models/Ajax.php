@@ -109,5 +109,43 @@ class Application_Model_Ajax extends Zend_Db_Table {
         //echo $sql;exit;
         return $data;
     }
+    
+    public function getRateChart(){
+        $sql = "SELECT RC.RATE_ID,
+                RC.RATE_TYPE,
+                RT.RATE_TYPE_NAME,
+                RC.PERCENT,
+                RC.RANGE_LOW,
+                RC.RANGE_HIGH
+           FROM RATE_CHART RC, L_RATE_TYPES RT
+          WHERE RC.RATE_TYPE = RT.RATE_TYPE_ID AND RT.ACTIVE_YN = 'Y'
+       ORDER BY RC.RATE_ID ASC";
+        $data = $this->_db->fetchAll($sql);
+        //echo $sql;exit;
+        return $data;
+    }
+    
+    public function finalizeBill($data){
+        $o_status_code = sprintf('%20f', '');
+        $o_status_message = sprintf('%4000s', '');
+        $out_parms = array(
+            "o_status_code" => &$o_status_code,
+            "o_status_message" => &$o_status_message
+        );
+
+        $all_data = array_merge($data, $out_parms);
+        //print_r($all_data);
+        
+        $this->_db->query("BEGIN FINALIZE_NEW_BILL (
+           :p_bill_id,
+           :p_amount,
+           :p_retention,
+           :p_vat,
+           :p_it,
+           :o_status_code,
+           :o_status_message); END;", $all_data);
+        //var_dump ($all_data);exit;
+        return $all_data;
+    }
 
 }

@@ -13,13 +13,61 @@
                     <input type="hidden" name="p_bill_id" value="<?= $this->bill_id; ?>">
 
                     <div class="item form-group">
-                        <label class="control-label col-md-4 col-sm-4 col-xs-12">Measurement Book(MB) No. <span class="required">*</span>
+                        <label class="control-label col-md-4 col-sm-4 col-xs-12">Work Order Value
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input type="text" name="p_mb_no" value="<?= $this->billInfo['MB_NO']?>" placeholder="Please Enter Measurement Book(MB) No." required="required" class="form-control col-md-7 col-xs-12">
+                            <input type="text" readonly value="<?= $this->work_value; ?>" class="form-control col-md-7 col-xs-12">
                         </div>
                     </div>
-                 
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-4 col-sm-4 col-xs-12">Recommended New Bill Payment
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="ex_amt" type="text" readonly value="<?= $this->ex_amt; ?>" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-4 col-sm-4 col-xs-12">New Payment
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" name="p_amount" onblur="getrate(this.value)" placeholder="Enter Payment Amount" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-4 col-sm-4 col-xs-12">Retention Amount
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="retention" type="text" readonly name="p_retention" placeholder="Retention Amount" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-4 col-sm-4 col-xs-12">VAT Amount
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="vat" type="text" name="p_vat" readonly placeholder="VAT Amount" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-4 col-sm-4 col-xs-12">IT Amount
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="it" type="text" name="p_it" readonly placeholder="IT Amount" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-4 col-sm-4 col-xs-12">Net Payable Amount
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="net" type="text" readonly placeholder="Net Payable Amount" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+
                 </div>
 
 
@@ -35,6 +83,33 @@
 </div>
 
 
+<script type="text/javascript">
 
+    function getrate(amount) {
+        var ex_amt = document.getElementById("ex_amt").value;
+        if (parseInt(ex_amt) == parseInt(amount))
+        {
+            document.getElementById("retention").value = amount * (<?= $this->rate_chart[0]['PERCENT'] ?> / 100);
+            document.getElementById("vat").value = amount * (<?= $this->rate_chart[1]['PERCENT'] ?> / 100);
+
+            if (parseInt(amount) >= <?= $this->rate_chart[2]['RANGE_LOW'] ?> && parseInt(amount) <= <?= $this->rate_chart[2]['RANGE_HIGH'] ?>)
+                document.getElementById("it").value = amount * (<?= $this->rate_chart[2]['PERCENT'] ?> / 100);
+            else if (parseInt(amount) >= <?= $this->rate_chart[3]['RANGE_LOW'] ?> && parseInt(amount) <= <?= $this->rate_chart[3]['RANGE_HIGH'] ?>)
+                document.getElementById("it").value = amount * (<?= $this->rate_chart[3]['PERCENT'] ?> / 100);
+            else if (parseInt(amount) >= <?= $this->rate_chart[4]['RANGE_LOW'] ?> && parseInt(amount) <= <?= $this->rate_chart[4]['RANGE_HIGH'] ?>)
+                document.getElementById("it").value = amount * (<?= $this->rate_chart[4]['PERCENT'] ?> / 100);
+            else if (parseInt(amount) >= <?= $this->rate_chart[5]['RANGE_LOW'] ?> && parseInt(amount) <= <?= $this->rate_chart[5]['RANGE_HIGH'] ?>)
+                document.getElementById("it").value = amount * (<?= $this->rate_chart[5]['PERCENT'] ?> / 100);
+            else if (parseInt(amount) >= <?= $this->rate_chart[6]['RANGE_LOW'] ?> && parseInt(amount) <= <?= $this->rate_chart[6]['RANGE_HIGH'] ?>)
+                document.getElementById("it").value = amount * (<?= $this->rate_chart[6]['PERCENT'] ?> / 100);
+            else
+                document.getElementById("it").value = amount * (<?= $this->rate_chart[7]['PERCENT'] ?> / 100);
+
+            document.getElementById("net").value = parseInt(amount) - parseInt(document.getElementById("retention").value) - parseInt(document.getElementById("vat").value) - parseInt(document.getElementById("it").value);
+        } else {
+            alert("WARNING:: NEW PAYMENT SHOULD BE SAME AS RECOMMENDED PAYMENT");
+        }
+    }
+</script>
 
 

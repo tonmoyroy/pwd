@@ -71,6 +71,13 @@ class StaffController extends Zend_Controller_Action {
         $this->view->applist = $this->staff->getfnAppList($getdata['id'], $user_type);
         $this->view->year = $this->staff->getFiscalYear($getdata['id']);
     }
+    
+    public function exapplistAction(){
+        $getdata = $this->_request->getQuery();
+        $this->view->user_type = $user_type = $this->PWDSession->session_data['user_type_id'];
+        $this->view->applist = $this->staff->getExecutiveAppList($getdata['id'], $user_type);
+        $this->view->year = $this->staff->getFiscalYear($getdata['id']);
+    }
 
     public function showcontractagreeAction() {
         $this->view->user_type = $user_type = $this->PWDSession->session_data['user_type_id'];
@@ -127,14 +134,14 @@ class StaffController extends Zend_Controller_Action {
     }
 
     public function divaccbillAction() {
+        $user_id = $this->PWDSession->session_data['user_id'];
         $this->view->user_type = $user_type = $this->PWDSession->session_data['user_type_id'];
         if ($user_type == 4) {
             $getdata = $this->_request->getQuery();
             $this->view->ca_no = $getdata['no'];
-            
-            
+                        
             if ($getdata['pay_id']) {
-                $status = $this->staff->finalizeSecurityPayment($getdata['no'], $getdata['pay_id']);
+                $status = $this->staff->finalizeSecurityPayment($getdata['no'], $getdata['pay_id'],$user_id);
                 if ($status['o_status_code'] == 1) {
                     $this->flashMessenger->addMessage(array('alert-success' => $status['o_status_message']));
                 } else {
@@ -142,8 +149,7 @@ class StaffController extends Zend_Controller_Action {
                 }
                 $this->_redirect('Staff/divaccbill?no=' . $getdata['no']);
             }
-            
-            
+                        
             $this->view->appdata = $this->staff->getAppData($getdata['no']);
             $this->view->paymentinfo = $payinfo = $this->staff->getPaymentInfo($getdata['no']);
             $this->view->allpayment = $payinfo = $this->staff->getBillPayment($getdata['no']);

@@ -276,19 +276,19 @@
                                 <td style="text-align:center"><?= $app['RETENATION'] ?></td>
                                 <td style="text-align:center"><?= $app['VAT'] ?></td>
                                 <td>
-                                    <?php if ($this->user_type == 4 and !$app['MB_NO'] and $app['STATUS'] == 'N') { ?>
+                                    <?php if ($this->user_type == 4 and ! $app['MB_NO'] and $app['STATUS'] == 'N') { ?>
                                         <button type="button" class="btn btn-primary" data-toggle="modal" onclick="loadmodal(<?= $app['BILL_ID'] ?>)" data-target=".bs-example-modal-lg">Create Bill</button>                  
                                         <div id="o_newbill">
                                         </div>
-                                    <?php }elseif($this->user_type == 4 and $app['MB_NO'] and $app['STATUS'] == 'N'){ ?>
+                                    <?php } elseif ($this->user_type == 4 and $app['MB_NO'] and $app['STATUS'] == 'N') { ?>
                                         <button type="button" class="btn btn-info " data-toggle="modal" onclick="loadmodal(<?= $app['BILL_ID'] ?>)" data-target=".bs-example-modal-lg">Update Bill</button>                  
                                         <div id="o_newbill">
                                         </div>
-                                        
-                                        <button type="button" class="btn btn-success " data-toggle="modal" onclick="finalizebill(<?= $app['BILL_ID'] ?>)" data-target=".bs-example-modal-sm">Finalize Bill</button>                  
+
+                                        <button type="button" class="btn btn-success " data-toggle="modal" onclick="finalizebill(<?= $app['BILL_ID'];?>, <?= $app['AMOUNT']?>)" data-target=".bs-example-modal-sm">Finalize Bill</button>                  
                                         <div id="o_finalizebill">
                                         </div>
-                                    <?php }?>
+                                    <?php } ?>
                                 </td>
 
                             </tr>
@@ -313,7 +313,7 @@
     </div>
 
 
-</div>
+    </div>
 
 
 
@@ -471,21 +471,23 @@
         jQuery.ajax({
             type: "POST",
             url: link,
-            data: "bill_id=" + bill_id + "&ca_no=" +ca_no,
+            data: "bill_id=" + bill_id + "&ca_no=" + ca_no,
             async: false,
             success: function (msg) {
                 jQuery('#o_newbill').html(msg);
             }
         });
     }
-    
-    function finalizebill(bill_id) {
+
+    function finalizebill(bill_id,amount) {
         var link = "<?= $this->baseUrl() ?>/ajax/finalizebill";
         var ca_no = document.getElementById("ca_no").value;
+        var work_value = document.getElementById("work_value").value;
+        
         jQuery.ajax({
             type: "POST",
             url: link,
-            data: "bill_id=" + bill_id + "&ca_no=" +ca_no,
+            data: "bill_id=" + bill_id + "&ca_no=" + ca_no + "&work_value=" + work_value +"&amt=" + amount,
             async: false,
             success: function (msg) {
                 jQuery('#o_finalizebill').html(msg);

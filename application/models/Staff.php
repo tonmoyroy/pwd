@@ -225,6 +225,46 @@ class Application_Model_Staff extends Zend_Db_Table {
         //print_r($data);exit;
         return $data;
     }
+    
+    
+    public function getExecutiveAppList() {
+        
+        $sql = "SELECT CA.CA_NO,
+                CA.CA_NAME,
+                S.SECTOR_NAME,
+                CA.EST_COST,
+                CA.WORK_VALUE,
+                P.PAYMENT_ID,
+                P.PAYMENT_METHOD,
+                PM.PAYMENT_METHOD PAYMENT_METHOD_NAME,
+                P.PAY_DATE,
+                P.AMOUNT,
+                NVL (BT.BILL_TOTAL, 0) BILL_TOTAL,
+                C.CONTRACTOR_ID,
+                C.NAME,
+                CA.SIGN_DATE,
+                CA.CREATE_DATE
+           FROM CONTRACT_AGREEMENT CA,
+                PAYMENT P,
+                L_SECTOR S,
+                CONTRACTOR C,
+                L_PAYMENT_METHOD PM,
+                (  SELECT SUM (B.AMOUNT) BILL_TOTAL, B.CA_NO
+                     FROM BILL B
+                    WHERE B.STATUS = 'Y'
+                 GROUP BY B.CA_NO) BT
+          WHERE     CA.SECTOR_ID = S.SECTOR_ID
+                AND CA.CONTRACTOR_ID = C.CONTRACTOR_ID
+                AND CA.CA_NO = P.CA_NO
+                AND P.PAYMENT_METHOD = PM.PAYMENT_METHOD_ID
+                AND BT.CA_NO(+) = CA.CA_NO
+                AND P.STATUS = 'Y'";
+        
+        //echo $sql;exit;
+        $data = $this->_db->fetchAll($sql);
+        //print_r($data);exit;
+        return $data;
+    }
 
     public function getFiscalYear($id) {
         $sql = "SELECT FISCAL_YR_ID,
@@ -333,7 +373,7 @@ class Application_Model_Staff extends Zend_Db_Table {
           WHERE     CA_NO = '$ca_no'
                 AND P.BANK_ID = B.BANK_ID
                 AND P.PAYMENT_METHOD = PM.PAYMENT_METHOD_ID
-       ORDER BY PAY_DATE";
+       ORDER BY PAYMENT_ID,PAY_DATE";
         //echo $sql;exit;
         $data = $this->_db->fetchRow($sql);
         return $data;
@@ -356,7 +396,7 @@ class Application_Model_Staff extends Zend_Db_Table {
           WHERE     CA_NO = '$ca_no'
                 AND P.BANK_ID = B.BANK_ID
                 AND P.PAYMENT_METHOD = PM.PAYMENT_METHOD_ID
-       ORDER BY PAY_DATE";
+       ORDER BY PAYMENT_ID,PAY_DATE";
         //echo $sql;exit;
         $data = $this->_db->fetchAll($sql);
         return $data;
@@ -385,7 +425,7 @@ class Application_Model_Staff extends Zend_Db_Table {
         return $data;
     }
     
-    public function finalizeSecurityPayment($ca_no,$p_id){
+    public function finalizeSecurityPayment($ca_no,$p_id,$user_id){
         $o_status_code = sprintf('%20f', '');
         $o_status_message = sprintf('%4000s', '');
         
@@ -396,6 +436,7 @@ class Application_Model_Staff extends Zend_Db_Table {
 
         $data['p_payment_id'] =$p_id ;
         $data['p_ca_no'] = $ca_no;
+        $data['p_userid']=$user_id;
         $all_data = array_merge($data, $out_parms);
         //print_r ($all_data);exit();
 

@@ -102,7 +102,7 @@ $fiscal_yr = Zend_Registry::get('FISCAL_YR');
                         </ul>
                     </li>
                     
-                    <li><a ><i class="fa fa-user"></i> Finalized APP <span class="fa fa-chevron-down"></span></a>
+                    <li><a ><i class="fa fa-user"></i> Finalized Payment Security</a>
                         <ul class="nav child_menu" style="display: none">
                             <?php foreach ($fiscal_yr as $year) { ?>
                                 <li><a href="<?= $this->baseUrl(); ?>/Staff/fnapplist?id=<?= $year['FISCAL_YR_ID'] ?>">FISCAL YEAR:<?= $year['START_YEAR'] ?>-<?= $year['END_YEAR'] ?></a>
@@ -122,7 +122,7 @@ $fiscal_yr = Zend_Registry::get('FISCAL_YR');
                     <li><a ><i class="fa fa-user"></i> APP APPLICATIONS<span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu" style="display: none">
                             <?php foreach ($fiscal_yr as $year) { ?>
-                                <li><a href="<?= $this->baseUrl(); ?>/Staff/applist?id=<?= $year['FISCAL_YR_ID'] ?>">FISCAL YEAR:<?= $year['START_YEAR'] ?>-<?= $year['END_YEAR'] ?></a>
+                                <li><a href="<?= $this->baseUrl(); ?>/Staff/exapplist?id=<?= $year['FISCAL_YR_ID'] ?>">FISCAL YEAR:<?= $year['START_YEAR'] ?>-<?= $year['END_YEAR'] ?></a>
                                 </li>
                             <?php } ?>
                         </ul>

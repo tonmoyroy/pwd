@@ -93,40 +93,52 @@ class AjaxController extends Zend_Controller_Action {
         $this->_helper->layout->disableLayout();
         //$str = $this->baseUrl()."js/dropzone/dropzone.js"; echo $str;exit;
         $this->view->bill_id = $bill_id = $this->_request->getPost('bill_id');
-        $this->view->ca_no = $this->_request->getPost('ca_no');//print_r($ca_no);exit;
+        $this->view->ca_no = $this->_request->getPost('ca_no'); //print_r($ca_no);exit;
         if ($this->_request->getPost('submit')) {
             $postdata = $this->_request->getPost();
             $ca_no = $postdata['ca_no'];
             unset($postdata['submit']);
             unset($postdata['ca_no']);
             $status = $this->ajax->updateNewBill($postdata);
-            $str = 
+            if ($status['o_status_code'] == 1) {
+                $this->flashMessenger->addMessage(array('alert-success' => $status['o_status_message']));
+            } else {
+                $this->flashMessenger->addMessage(array('alert-danger' => $status['o_status_message']));
+            }
             $this->_redirect('Staff/divaccbill?no=' . $ca_no);
             //return $status['o_status_code'];
         }
         $this->view->billInfo = $info = $this->ajax->getBillInfo($bill_id); //print_r($info);exit;
     }
-    
-    public function finalizebillAction(){
+
+    public function finalizebillAction() {
         $this->_helper->layout->disableLayout();
         $this->view->bill_id = $bill_id = $this->_request->getPost('bill_id');
-        $this->view->ca_no = $this->_request->getPost('ca_no');//print_r($ca_no);exit;
+        $this->view->work_value = $work_value = $this->_request->getPost('work_value');
+        $this->view->ex_amt =  $this->_request->getPost('amt');
+        $this->view->ca_no = $this->_request->getPost('ca_no'); //print_r($ca_no);exit;
+        $this->view->rate_chart = $this->ajax->getRateChart();
+
         if ($this->_request->getPost('submit')) {
             $postdata = $this->_request->getPost();
+            
             $ca_no = $postdata['ca_no'];
             unset($postdata['submit']);
             unset($postdata['ca_no']);
             $status = $this->ajax->finalizeBill($postdata);
-            $str = 
+            
+            if ($status['o_status_code'] == 1) {
+                $this->flashMessenger->addMessage(array('alert-success' => $status['o_status_message']));
+            } else {
+                $this->flashMessenger->addMessage(array('alert-danger' => $status['o_status_message']));
+            }
             $this->_redirect('Staff/divaccbill?no=' . $ca_no);
             //return $status['o_status_code'];
         }
-       
     }
-    
+
 //    public function ajaxfileuploadAction(){
 //        $this->_helper->layout->disableLayout();
 //        
 //    }
-
 }
