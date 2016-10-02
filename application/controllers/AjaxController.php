@@ -91,6 +91,7 @@ class AjaxController extends Zend_Controller_Action {
 
     public function newbillAction() {
         $this->_helper->layout->disableLayout();
+        //$str = $this->baseUrl()."js/dropzone/dropzone.js"; echo $str;exit;
         $this->view->bill_id = $bill_id = $this->_request->getPost('bill_id');
         $this->view->ca_no = $this->_request->getPost('ca_no');//print_r($ca_no);exit;
         if ($this->_request->getPost('submit')) {
@@ -122,5 +123,10 @@ class AjaxController extends Zend_Controller_Action {
         }
        
     }
+    
+//    public function ajaxfileuploadAction(){
+//        $this->_helper->layout->disableLayout();
+//        
+//    }
 
 }

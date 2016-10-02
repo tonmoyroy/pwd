@@ -10,13 +10,13 @@
             <form id="newbillform" class="form-horizontal form-label-left" novalidate autocomplete="off" action="<?= $this->baseUrl() ?>/ajax/newbill" method="post">
                 <div class="modal-body">
                     <input type="hidden" name="ca_no" value="<?= $this->ca_no; ?>">
-                    <input type="hidden" name="p_bill_id" value="<?= $this->bill_id; ?>">
+                    <input id="bill_id" type="hidden" name="p_bill_id" value="<?= $this->bill_id; ?>">
 
                     <div class="item form-group">
                         <label class="control-label col-md-4 col-sm-4 col-xs-12">Measurement Book(MB) No. <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input type="text" name="p_mb_no" value="<?= $this->billInfo['MB_NO']?>" placeholder="Please Enter Measurement Book(MB) No." required="required" class="form-control col-md-7 col-xs-12">
+                            <input type="text" name="p_mb_no" value="<?= $this->billInfo['MB_NO'] ?>" placeholder="Please Enter Measurement Book(MB) No." required="required" class="form-control col-md-7 col-xs-12">
                         </div>
                     </div>
 
@@ -24,7 +24,7 @@
                         <label class="control-label col-md-4 col-sm-4 col-xs-12" for="email">Measurement Book(MB) Page No.<span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input type="text" name="p_mb_pg_no" value="<?= $this->billInfo['MB_PG_NO']?>" placeholder="Please Enter Measurement Book(MB) Page No." required="required"  class="form-control col-md-7 col-xs-12">
+                            <input type="text" name="p_mb_pg_no" value="<?= $this->billInfo['MB_PG_NO'] ?>" placeholder="Please Enter Measurement Book(MB) Page No." required="required"  class="form-control col-md-7 col-xs-12">
                         </div>
                     </div>
 
@@ -32,7 +32,7 @@
                         <label class="control-label col-md-4 col-sm-4 col-xs-12">MB Date <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input id="billdate"  type="text" value="<?= $this->billInfo['MB_DATE']?>"  name="p_date" class="date-picker form-control col-md-7 col-xs-12" placeholder="Enter MB Date" required="required">
+                            <input id="billdate"  type="text" value="<?= $this->billInfo['MB_DATE'] ?>"  name="p_date" class="date-picker form-control col-md-7 col-xs-12" placeholder="Enter MB Date" required="required">
                         </div>
                     </div>
 
@@ -40,7 +40,7 @@
                         <label class="control-label col-md-4 col-sm-4 col-xs-12" for="email">Cheque Page No.<span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input type="text" name="p_cheque_no" value="<?= $this->billInfo['CHEQUE_NO']?>" placeholder="Please Enter Cheque No." required="required"  class="form-control col-md-7 col-xs-12">
+                            <input type="text" name="p_cheque_no" value="<?= $this->billInfo['CHEQUE_NO'] ?>" placeholder="Please Enter Cheque No." required="required"  class="form-control col-md-7 col-xs-12">
                         </div>
                     </div>
 
@@ -48,7 +48,7 @@
                         <label class="control-label col-md-4 col-sm-4 col-xs-12" for="email">Voucher No.<span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input type="text" name="p_voucher_no" value="<?= $this->billInfo['VOUCHER_NO']?>" placeholder="Please Enter Voucher No." required="required"  class="form-control col-md-7 col-xs-12">
+                            <input type="text" name="p_voucher_no" value="<?= $this->billInfo['VOUCHER_NO'] ?>" placeholder="Please Enter Voucher No." required="required"  class="form-control col-md-7 col-xs-12">
                         </div>
                     </div>
                 </div>
@@ -61,10 +61,27 @@
 
             </form>
 
+            <!--            <div id="o_ajaxfileupload">
+                        </div>
+                        <div class="modal-header" style="text-align: center">
+                            <a href="" onclick="return ajaxfileupload()" style="color:red">File Upload</a>
+                        </div>-->
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_content">
+                            <p style="color:red;font-size: 14px">Upload Files</p>
+                            <p>Drag multiple files to the box below for multi upload or click to select files. This is for demonstration purposes only, the files are not uploaded to any server.</p>
+                  <form action="choices/form_upload.html" class="dropzone" style="border: 1px solid #e5e5e5; height: 300px; "></form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
     </div>
 </div>
-
 
 
 <script type="text/javascript">
@@ -76,6 +93,19 @@
             console.log(start.toISOString(), end.toISOString(), label);
         })
     });
+
+//    function ajaxfileupload() {
+//            var link = "<?= $this->baseUrl() ?>/ajax/ajaxfileupload";
+//            var bill_id = document.getElementById("bill_id").value;
+//            jQuery.ajax({
+//                url: link,
+//                data: "bill_id=" + bill_id,
+//                async: false,
+//                success: function (msg) {
+//                    jQuery('#o_ajaxfileupload').html(msg);
+//                }
+//            });
+//        }
 
 </script>
 
