@@ -213,59 +213,7 @@
             <div class="x_title">
                 <h2>Payment History [<?= $this->ca_no ?>]</h2>
                 <ul class="nav navbar-right panel_toolbox">
-                    <?php if ($this->user_type == 4) { ?><li>
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">Finalize Bill</button>
 
-                            <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
-                                <div class="modal-dialog modal-lg">
-                                    <div class="modal-content">
-
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
-                                            </button>
-                                            <h4 class="modal-title" id="myModalLabel" style="color:red">Finalize Bill</h4>
-                                        </div>
-                                        <form id="form" class="form-horizontal form-label-left" novalidate autocomplete="off" action="<?= $this->baseUrl() ?>/Staff/billcontractagree" method="post">
-                                            <div class="modal-body">
-                                                <input type="hidden" name="p_ca_no" value="<?= $this->appdata['CA_NO'] ?>">
-
-                                                <div class="item form-group">
-                                                    <label class="control-label col-md-4 col-sm-4 col-xs-12">Measurement Book(MB) No. <span class="required">*</span>
-                                                    </label>
-                                                    <div class="col-md-6 col-sm-6 col-xs-12">
-                                                        <input type="text" name="p_mb_no" placeholder="Please Enter Measurement Book(MB) No." required="required" class="form-control col-md-7 col-xs-12">
-                                                    </div>
-                                                </div>
-
-                                                <div class="item form-group">
-                                                    <label class="control-label col-md-4 col-sm-4 col-xs-12" for="email">Measurement Book(MB) Page No.<span class="required">*</span>
-                                                    </label>
-                                                    <div class="col-md-6 col-sm-6 col-xs-12">
-                                                        <input type="text" name="p_mb_pg_no" placeholder="Please Enter Measurement Book(MB) Page No." required="required"  class="form-control col-md-7 col-xs-12">
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label class="control-label col-md-4 col-sm-4 col-xs-12">Date <span class="required">*</span>
-                                                    </label>
-                                                    <div class="col-md-6 col-sm-6 col-xs-12">
-                                                        <input id="birthday" type="date"  class="date-picker form-control col-md-7 col-xs-12" placeholder="Enter Date" name="p_date" required="required">
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Make New Payment</button>
-                                            </div>
-
-                                        </form>
-
-
-                                    </div>
-                                </div>
-                            </div>
-                        </li><?php } ?>
                 </ul>
                 <div class="clearfix"></div>
 
@@ -282,10 +230,15 @@
                             <th style="text-align:center">SL#</th>
                             <th style="text-align:center">MB. NO</th>
                             <th style="text-align:center">MB. PAGE NO</th>
-                            <th style="text-align:center">DATE</th>
+                            <th style="text-align:center">MB. DATE</th>
+                            <th style="text-align:center">CHEQUE NO.</th>
+                            <th style="text-align:center">VOUCHER NO.</th>
                             <th style="text-align:center">AMOUNT</th>
                             <th style="text-align:center" >PERCENTAGE</th>
                             <th style="text-align:center" >PAYMENT STATUS</th>
+                            <th style="text-align:center" >RETENTION</th>
+                            <th style="text-align:center" >VAT</th>
+                            <th style="text-align:center" >ACTION</th>
                         </tr>
                     </thead>
 
@@ -302,6 +255,8 @@
                                 <td style="text-align:center"><?= $app['MB_NO'] ?></td>
                                 <td style="text-align:center"><?= $app['MB_PG_NO'] ?></td>
                                 <td style="text-align:center"><?= $app['MB_DATE'] ?></td>
+                                <td style="text-align:center"><?= $app['CHEQUE_NO'] ?></td>
+                                <td style="text-align:center"><?= $app['VOUCHER_NO'] ?></td>
                                 <td style="text-align:right"><?php
                                     $sum2 = $sum2 + $app['AMOUNT'];
                                     echo number_format($app['AMOUNT'])
@@ -316,21 +271,39 @@
                                     <?php } else {
                                         ?><a style="color:red">UNPAID</a>
                                     <?php }
-                                    ?></td>
+                                    ?>
+                                </td>
+                                <td style="text-align:center"><?= $app['RETENATION'] ?></td>
+                                <td style="text-align:center"><?= $app['VAT'] ?></td>
+                                <td>
+                                    <?php if ($this->user_type == 4 and !$app['MB_NO'] and $app['STATUS'] == 'N') { ?>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" onclick="loadmodal(<?= $app['BILL_ID'] ?>)" data-target=".bs-example-modal-lg">Create Bill</button>                  
+                                        <div id="o_newbill">
+                                        </div>
+                                    <?php }elseif($this->user_type == 4 and $app['MB_NO'] and $app['STATUS'] == 'N'){ ?>
+                                        <button type="button" class="btn btn-info " data-toggle="modal" onclick="loadmodal(<?= $app['BILL_ID'] ?>)" data-target=".bs-example-modal-lg">Update Bill</button>                  
+                                        <div id="o_newbill">
+                                        </div>
+                                        
+                                        <button type="button" class="btn btn-success " data-toggle="modal" onclick="finalizebill(<?= $app['BILL_ID'] ?>)" data-target=".bs-example-modal-sm">Finalize Bill</button>                  
+                                        <div id="o_finalizebill">
+                                        </div>
+                                    <?php }?>
+                                </td>
 
                             </tr>
                         <?php } ?>
-                        <tr><td style="text-align:right" colspan="4"><b>CUMULATIVE :</b></td>
+                        <tr><td style="text-align:right" colspan="6"><b>CUMULATIVE :</b></td>
                             <td style="text-align:right"><?= number_format($sum2) ?>.৳</td>
                             <td style="text-align:center"><?= number_format($sum) . "%" ?></td>
-                            <td ></td>
+                            <td colspan="6"></td>
 
                         </tr>
 
-                        <tr><td style="text-align:right" colspan="4"><b>REMAINING :</b></td>
+                        <tr><td style="text-align:right" colspan="6"><b>REMAINING :</b></td>
                             <td style="text-align:right"><?= number_format($this->appdata['WORK_VALUE'] - $sum2) ?>.৳</td>
                             <td style="text-align:center"><?= number_format(100 - $sum) . "%" ?></td>
-                            <td ></td>
+                            <td colspan="6"></td>
 
                         </tr>
                     </tbody>
@@ -342,19 +315,14 @@
 
 </div>
 
-<script type="text/javascript">
 
+
+
+<script type="text/javascript">
     window.onload = function () {
         number2text(<?= $this->appdata['EST_COST'] ?>);
         number2text2(<?= $this->appdata['WORK_VALUE'] ?>);
     }
-
-    $(function () {
-        $('#datetimepicker1').datetimepicker({
-            language: 'pt-BR'
-        });
-    });
-
 
     $(document).ready(function () {
         $('#datatable').dataTable();
@@ -374,8 +342,6 @@
         });
     });
     TableManageButtons.init();
-
-
 //    $('form').submit(function (e) {
 //        e.preventDefault();
 //        var submit = true;
@@ -405,47 +371,11 @@
 //    });
 
 
-    function checkvalue(amt) {
-        var submit = true;
-        var method = document.getElementById("method").value;
-        var total = document.getElementById("work_value").value;
-        var due_amt = <?= $this->appdata['WORK_VALUE'] - $this->total_amt ?>;
-        var due_prcnt = document.getElementById("due_prcnt").value;
-        if (!method)
-            alert("Please Select a Method");
 
-        if (method == 1)
-        {
-            if (parseInt(amt) <= 5) {
-                alert("WARNING::New Bill Must Be Greater Than 5% of Work Order Value");
-                submit = false;
-            }
-            if (parseInt(amt) > parseInt(due_prcnt)) {
-                alert("WARNING::New Bill Must Be Less Than Less Than Due Percentage");
-                submit = false;
-            }
-
-            document.getElementById("conf_amt").value = total * (amt / 100);
-
-        } else {
-            var percent = (amt / total) * 100;
-            if (parseInt(percent) <= 5) {
-                alert("WARNING::New Bill Must Be Greater Than 5% of Work Order Value");
-                submit = false;
-            }
-            if (parseInt(amt) > parseInt(due_amt)) {
-                alert("WARNING::New Bill Must Be Less Than Less Than Due Amount");
-                submit = false;
-            }
-            document.getElementById("conf_amt").value = amt;
-        }
-        return submit;
-    }
 
     function number2text(value) {
         var fraction = Math.round(frac(value) * 100);
         var f_text = "";
-
         if (fraction > 0) {
             f_text = "AND " + convert_number(fraction) + " POYSA";
         }
@@ -456,7 +386,6 @@
     function number2text2(value) {
         var fraction = Math.round(frac(value) * 100);
         var f_text = "";
-
         if (fraction > 0) {
             f_text = "AND " + convert_number(fraction) + " POYSA";
         }
@@ -473,18 +402,17 @@
         {
             return "NUMBER OUT OF RANGE!";
         }
-        var Gn = Math.floor(number / 10000000);  /* Crore */
+        var Gn = Math.floor(number / 10000000); /* Crore */
         number -= Gn * 10000000;
-        var kn = Math.floor(number / 100000);     /* lakhs */
+        var kn = Math.floor(number / 100000); /* lakhs */
         number -= kn * 100000;
-        var Hn = Math.floor(number / 1000);      /* thousand */
+        var Hn = Math.floor(number / 1000); /* thousand */
         number -= Hn * 1000;
-        var Dn = Math.floor(number / 100);       /* Tens (deca) */
-        number = number % 100;               /* Ones */
+        var Dn = Math.floor(number / 100); /* Tens (deca) */
+        number = number % 100; /* Ones */
         var tn = Math.floor(number / 10);
         var one = Math.floor(number % 10);
         var res = "";
-
         if (Gn > 0)
         {
             res += (convert_number(Gn) + " KOTI");
@@ -509,7 +437,6 @@
 
         var ones = Array("", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN", "FIFTEEN", "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN");
         var tens = Array("", "", "TWENTY", "THIRTY", "FOURTY", "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY");
-
         if (tn > 0 || one > 0)
         {
             if (!(res == ""))
@@ -538,6 +465,33 @@
         return res;
     }
 
+    function loadmodal(bill_id) {
+        var link = "<?= $this->baseUrl() ?>/ajax/newbill";
+        var ca_no = document.getElementById("ca_no").value;
+        jQuery.ajax({
+            type: "POST",
+            url: link,
+            data: "bill_id=" + bill_id + "&ca_no=" +ca_no,
+            async: false,
+            success: function (msg) {
+                jQuery('#o_newbill').html(msg);
+            }
+        });
+    }
+    
+    function finalizebill(bill_id) {
+        var link = "<?= $this->baseUrl() ?>/ajax/finalizebill";
+        var ca_no = document.getElementById("ca_no").value;
+        jQuery.ajax({
+            type: "POST",
+            url: link,
+            data: "bill_id=" + bill_id + "&ca_no=" +ca_no,
+            async: false,
+            success: function (msg) {
+                jQuery('#o_finalizebill').html(msg);
+            }
+        });
+    }
 
 </script>
 

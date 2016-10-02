@@ -39,9 +39,8 @@ class AjaxController extends Zend_Controller_Action {
 
     public function uploadfileAction() {
         $this->_helper->layout->disableLayout();
-        $this->view->ca_no = $ca_no = $this->_request->getPost('ca_no');//print_r($ca_no);
-        $this->view->filelist =$file= $this->ajax->showFiles($ca_no);//print_r($file);exit;
-
+        $this->view->ca_no = $ca_no = $this->_request->getPost('ca_no'); //print_r($ca_no);
+        $this->view->filelist = $file = $this->ajax->showFiles($ca_no); //print_r($file);exit;
     }
 
     public function storefileAction() {
@@ -89,6 +88,39 @@ class AjaxController extends Zend_Controller_Action {
             exit;
         }
     }
-   
+
+    public function newbillAction() {
+        $this->_helper->layout->disableLayout();
+        $this->view->bill_id = $bill_id = $this->_request->getPost('bill_id');
+        $this->view->ca_no = $this->_request->getPost('ca_no');//print_r($ca_no);exit;
+        if ($this->_request->getPost('submit')) {
+            $postdata = $this->_request->getPost();
+            $ca_no = $postdata['ca_no'];
+            unset($postdata['submit']);
+            unset($postdata['ca_no']);
+            $status = $this->ajax->updateNewBill($postdata);
+            $str = 
+            $this->_redirect('Staff/divaccbill?no=' . $ca_no);
+            //return $status['o_status_code'];
+        }
+        $this->view->billInfo = $info = $this->ajax->getBillInfo($bill_id); //print_r($info);exit;
+    }
+    
+    public function finalizebillAction(){
+        $this->_helper->layout->disableLayout();
+        $this->view->bill_id = $bill_id = $this->_request->getPost('bill_id');
+        $this->view->ca_no = $this->_request->getPost('ca_no');//print_r($ca_no);exit;
+        if ($this->_request->getPost('submit')) {
+            $postdata = $this->_request->getPost();
+            $ca_no = $postdata['ca_no'];
+            unset($postdata['submit']);
+            unset($postdata['ca_no']);
+            $status = $this->ajax->finalizeBill($postdata);
+            $str = 
+            $this->_redirect('Staff/divaccbill?no=' . $ca_no);
+            //return $status['o_status_code'];
+        }
+       
+    }
 
 }

@@ -364,13 +364,20 @@ class Application_Model_Staff extends Zend_Db_Table {
     
     
     public function getBillPayment($ca_no) {
-        $sql = "SELECT CA_NO,
+        $sql = "SELECT BILL_ID,
+                CA_NO,
+                AMOUNT,
                 MB_NO,
                 MB_PG_NO,
                 MB_DATE,
-                AMOUNT,
-                STATUS
-           FROM PWD.BILL
+                RETENATION,
+                VAT,
+                IT,
+                STATUS,
+                BILL_PASS_DATE,
+                CHEQUE_NO,
+                VOUCHER_NO
+           FROM BILL
           WHERE CA_NO = '$ca_no'
        ORDER BY MB_DATE";
         //echo $sql;exit;

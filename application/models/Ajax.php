@@ -62,5 +62,52 @@ class Application_Model_Ajax extends Zend_Db_Table {
         //echo $sql;exit;
         return $data;
     }
+    
+    public function updateNewBill($data){
+        $o_status_code = sprintf('%20f', '');
+        $o_status_message = sprintf('%4000s', '');
+        $out_parms = array(
+            "o_status_code" => &$o_status_code,
+            "o_status_message" => &$o_status_message
+        );
+
+        $all_data = array_merge($data, $out_parms);
+        //print_r($all_data);
+        $stmt = new Zend_Db_Statement_Oracle($this->_db, "ALTER SESSION SET NLS_DATE_FORMAT='MM/DD/YYYY'");
+        $stmt->execute();
+        
+        $this->_db->query("BEGIN UPDATE_NEW_BILL (
+           :p_bill_id,
+           :p_mb_no,
+           :p_mb_pg_no,
+           :p_date,
+           :p_cheque_no,
+           :p_voucher_no,
+           :o_status_code,
+           :o_status_message); END;", $all_data);
+        //var_dump ($all_data);exit;
+        return $all_data;
+    }
+    
+    public function getBillInfo($bill_id){
+        $sql = "SELECT BILL_ID,
+                CA_NO,
+                AMOUNT,
+                MB_NO,
+                MB_PG_NO,
+                TO_CHAR (MB_DATE, 'MM/DD/YYYY') MB_DATE,
+                RETENATION,
+                VAT,
+                IT,
+                STATUS,
+                BILL_PASS_DATE,
+                CHEQUE_NO,
+                VOUCHER_NO
+           FROM BILL
+          WHERE BILL_ID = $bill_id";
+        $data = $this->_db->fetchRow($sql);
+        //echo $sql;exit;
+        return $data;
+    }
 
 }
