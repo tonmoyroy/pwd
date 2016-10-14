@@ -1,0 +1,14 @@
+<label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Select Instalment Amount <span class="required">*</span>
+</label>
+
+
+<div class="col-md-6 col-sm-6 col-xs-12">
+    <select name="p_instalment_id" required class="select2_single form-control">
+        <option value="">Please Select</option>
+        <?php
+        foreach ($this->instalmentlist as $types) {
+            ?>
+            <option value="<?= $types['INSTALMENT_ID'] ?>"><?= $types['AMOUNT'] ?></option>
+        <?php } ?>
+    </select>
+</div>

@@ -30,6 +30,8 @@ class StaffController extends Zend_Controller_Action {
     public function indexAction() {
         $user_id = $this->PWDSession->session_data['user_id'];
         $this->view->userinfo = $userinfo = $this->staff->getUserInfo($user_id);
+
+        $this->view->fundinfo = $this->staff->getFundStatus();
     }
 
     public function createcontractagreeAction() {
@@ -61,7 +63,7 @@ class StaffController extends Zend_Controller_Action {
     public function applistAction() {
         $getdata = $this->_request->getQuery();
         $this->view->user_type = $user_type = $this->PWDSession->session_data['user_type_id'];
-        $this->view->applist = $this->staff->getAppList($getdata['id'], $user_type);
+        $this->view->applist = $this->staff->getAppList($getdata['id'], $user_type, 'N');
         $this->view->year = $this->staff->getFiscalYear($getdata['id']);
     }
 
@@ -71,8 +73,15 @@ class StaffController extends Zend_Controller_Action {
         $this->view->applist = $this->staff->getfnAppList($getdata['id'], $user_type);
         $this->view->year = $this->staff->getFiscalYear($getdata['id']);
     }
-    
-    public function exapplistAction(){
+
+    public function approvlistAction() {
+        $getdata = $this->_request->getQuery();
+        $this->view->user_type = $user_type = $this->PWDSession->session_data['user_type_id'];
+        $this->view->applist = $this->staff->getAppList($getdata['id'], $user_type, 'Y');
+        $this->view->year = $this->staff->getFiscalYear($getdata['id']);
+    }
+
+    public function exapplistAction() {
         $getdata = $this->_request->getQuery();
         $this->view->user_type = $user_type = $this->PWDSession->session_data['user_type_id'];
         $this->view->applist = $this->staff->getExecutiveAppList($getdata['id'], $user_type);
@@ -105,15 +114,19 @@ class StaffController extends Zend_Controller_Action {
         $this->view->user_type = $user_type = $this->PWDSession->session_data['user_type_id'];
         if ($user_type == 2) {
             $getdata = $this->_request->getQuery();
-            $this->view->ca_no = $getdata['no'];
-            $this->view->appdata = $this->staff->getAppData($getdata['no']);
-            $this->view->paymentinfo = $payinfo = $this->staff->getPaymentInfo($getdata['no']);
-            $this->view->allpayment = $payinfo = $this->staff->getBillPayment($getdata['no']);
-            $total_amt = 0;
-            foreach ($payinfo as $pay) {
-                $total_amt = $total_amt + $pay['AMOUNT'];
+            if ($getdata) {
+                $this->view->ca_no = $getdata['no'];
+                $this->view->appdata = $appdata = $this->staff->getAppData($getdata['no']); //print_r($appdata);exit;
+                $this->view->paymentinfo = $payinfo = $this->staff->getPaymentInfo($getdata['no']);
+                $this->view->allpayment = $payinfo = $this->staff->getBillPayment($getdata['no']);
+                $this->view->runningBill = $this->staff->getRunningBillInfo($appdata['SIGN_DATE'], $appdata['KHAT_ID']);
+                $this->view->totalBudget = $this->staff->getTotalBudget($appdata['SIGN_DATE']);
+                $total_amt = 0;
+                foreach ($payinfo as $pay) {
+                    $total_amt = $total_amt + $pay['AMOUNT'];
+                }
+                $this->view->total_amt = $total_amt;
             }
-            $this->view->total_amt = $total_amt;
 
             $postdata = $this->_request->getPost();
             if ($postdata) {
@@ -139,9 +152,9 @@ class StaffController extends Zend_Controller_Action {
         if ($user_type == 4) {
             $getdata = $this->_request->getQuery();
             $this->view->ca_no = $getdata['no'];
-                        
+
             if ($getdata['pay_id']) {
-                $status = $this->staff->finalizeSecurityPayment($getdata['no'], $getdata['pay_id'],$user_id);
+                $status = $this->staff->finalizeSecurityPayment($getdata['no'], $getdata['pay_id'], $user_id);
                 if ($status['o_status_code'] == 1) {
                     $this->flashMessenger->addMessage(array('alert-success' => $status['o_status_message']));
                 } else {
@@ -149,35 +162,75 @@ class StaffController extends Zend_Controller_Action {
                 }
                 $this->_redirect('Staff/divaccbill?no=' . $getdata['no']);
             }
-                        
+
             $this->view->appdata = $this->staff->getAppData($getdata['no']);
             $this->view->paymentinfo = $payinfo = $this->staff->getPaymentInfo($getdata['no']);
             $this->view->allpayment = $payinfo = $this->staff->getBillPayment($getdata['no']);
 
-            $postdata = $this->_request->getPost();
-            if ($postdata) {
-                print_r($postdata);
-                exit;
-
-                if ($status['o_status_code'] == 1) {
-                    $this->flashMessenger->addMessage(array('alert-success' => $status['o_status_message']));
-                } else {
-                    $this->flashMessenger->addMessage(array('alert-danger' => $status['o_status_message']));
-                }
-                $this->_redirect('Staff/billcontractagree?no=' . $postdata['p_ca_no']);
-            }
+//            $postdata = $this->_request->getPost();
+//            if ($postdata) {
+//                print_r($postdata);
+//                exit;
+//
+//                if ($status['o_status_code'] == 1) {
+//                    $this->flashMessenger->addMessage(array('alert-success' => $status['o_status_message']));
+//                } else {
+//                    $this->flashMessenger->addMessage(array('alert-danger' => $status['o_status_message']));
+//                }
+//                $this->_redirect('Staff/billcontractagree?no=' . $postdata['p_ca_no']);
+//            }
         }
     }
-    
+
     public function divaccpaymentAction() {
         $this->view->user_type = $user_type = $this->PWDSession->session_data['user_type_id'];
         if ($user_type == 4) {
             $getdata = $this->_request->getQuery();
             $this->view->ca_no = $getdata['no'];
-            
 
             $this->view->appdata = $this->staff->getAppData($getdata['no']);
             $this->view->paymentinfo = $payinfo = $this->staff->getPaymentInfo($getdata['no']);
+        }
+    }
+
+    public function showcontractorAction() {
+        $getdata = $this->_request->getQuery();
+        $this->view->cid = $cid = $getdata['no'];
+        $this->view->c_info = $this->staff->getContractorInfo($cid);
+        $this->view->contract_list = $this->staff->getContractAwardedInfo($cid);
+    }
+
+    public function instalmentAction() {
+        $user_id = $this->PWDSession->session_data['user_id'];
+        $this->view->helper = $this->help;
+        $this->view->instalmentlist = $this->staff->getInstalmentList();
+        $postdata = $this->_request->getPost();
+        if ($postdata) {
+//            print_r($postdata);exit;
+            $status = $this->staff->createInstalment($postdata);
+            if ($status['o_status_code'] == 1) {
+                $this->flashMessenger->addMessage(array('alert-success' => $status['o_status_message']));
+            } else {
+                $this->flashMessenger->addMessage(array('alert-danger' => $status['o_status_message']));
+            }
+            $this->_redirect('Staff/instalment');
+        }
+    }
+
+    public function runningbillAction() {
+        $user_id = $this->PWDSession->session_data['user_id'];
+        $this->view->helper = $this->help;
+        $this->view->instalmentlist = $this->staff->getRunningBillList();
+        $postdata = $this->_request->getPost();
+        if ($postdata) {
+            //print_r($postdata);exit;
+            $status = $this->staff->createRunningBill($postdata);
+            if ($status['o_status_code'] == 1) {
+                $this->flashMessenger->addMessage(array('alert-success' => $status['o_status_message']));
+            } else {
+                $this->flashMessenger->addMessage(array('alert-danger' => $status['o_status_message']));
+            }
+            $this->_redirect('Staff/runningbill');
         }
     }
 

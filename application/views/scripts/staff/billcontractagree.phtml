@@ -188,7 +188,7 @@
                         </div>
                     </div>
 
-                    
+
                 </form>
             </div>
         </div>
@@ -202,7 +202,7 @@
             <div class="x_title">
                 <h2>Payment History [<?= $this->ca_no ?>]</h2>
                 <ul class="nav navbar-right panel_toolbox">
-                    <?php if ($this->user_type == 2) { ?><li>
+                    <?php if ($this->user_type == 2 and $this->appdata['STATUS'] == 'N') { ?><li>
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">Make New Payment</button>
 
                             <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
@@ -217,7 +217,7 @@
                                         <form id="form" class="form-horizontal form-label-left" novalidate autocomplete="off" action="<?= $this->baseUrl() ?>/Staff/billcontractagree" method="post">
                                             <div class="modal-body">
                                                 <input type="hidden" name="p_ca_no" value="<?= $this->appdata['CA_NO'] ?>">
-                                                
+
                                                 <div class="item form-group">
                                                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Work Order Value
                                                     </label>
@@ -225,9 +225,10 @@
                                                         <input type="text" readonly value="<?= number_format($this->appdata['WORK_VALUE']); ?>" class="form-control col-md-7 col-xs-12">
                                                     </div>
                                                 </div>
-                                                
+
+
                                                 <div class="item form-group">
-                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Remaining Amount
+                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Remaining Amount (W.O.)
                                                     </label>
                                                     <div class="col-md-6 col-sm-6 col-xs-12">
                                                         <input id="due_amt" type="text" readonly value="<?= number_format($this->appdata['WORK_VALUE'] - $this->total_amt); ?>" class="form-control col-md-7 col-xs-12">
@@ -235,11 +236,31 @@
                                                 </div>
 
                                                 <div class="item form-group">
-                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Remaining Percentage(%)
+                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Remaining (%) (W.O.)
                                                     </label>
                                                     <div class="col-md-6 col-sm-6 col-xs-12">
                                                         <input id="due_prcnt" type="text" readonly value="<?= (($this->appdata['WORK_VALUE'] - $this->total_amt) / $this->appdata['WORK_VALUE']) * 100; ?>" class="form-control col-md-7 col-xs-12">
                                                     </div>
+                                                </div>
+
+                                                <div class="item form-group">
+                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Select Running Bill <span class="required">*</span>
+                                                    </label>
+
+                                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                                        <select id="khat" name="p_rn_bill_id" required  onblur="getrestrunningbill(this.value)" class=" form-control">
+                                                            <option value="">Please Select</option>
+                                                            <?php
+                                                            $khatlist = $this->runningBill;
+                                                            foreach ($khatlist as $types) {
+                                                                ?>
+                                                                <option value="<?= $types['RN_BILL_ID'] ?>"><?= $types['SAMOUNT'] ?></option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="item form-group" id="o_remaining_amt" >
                                                 </div>
 
                                                 <div class="form-group">
@@ -247,11 +268,12 @@
                                                     <div class="col-md-6 col-sm-6 col-xs-12">
                                                         <select id="method" class="form-control">
                                                             <option value="">Please Select</option>
-                                                            <option value="1">Percentage(of work order value)</option>
+                                                            <option value="1">Percentage(of remaining running bill)</option>
                                                             <option value="2">Figure</option>
                                                         </select>
                                                     </div>
                                                 </div>
+
 
                                                 <div class="item form-group">
                                                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Enter Value <span class="required">*</span>
@@ -298,8 +320,14 @@
                             <th style="text-align:center">MB. NO</th>
                             <th style="text-align:center">MB. PAGE NO</th>
                             <th style="text-align:center">DATE</th>
+                            <th style="text-align:center" >BILL</th>
                             <th style="text-align:center">AMOUNT</th>
+                            
                             <th style="text-align:center" >PERCENTAGE</th>
+                            <th style="text-align:center" >RETENTION</th>
+                            <th style="text-align:center" >VAT</th>
+                            <th style="text-align:center" >IT</th>
+                            <th style="text-align:center" >NET PAYABLE</th>
                             <th style="text-align:center" >PAYMENT STATUS</th>
                         </tr>
                     </thead>
@@ -310,22 +338,39 @@
                         $i = 1;
                         $sum = 0;
                         $sum2 = 0;
+                        $ret = 0;
+                        $vat = 0;
+                        $it = 0;
+                        $net = 0;
                         foreach ($this->allpayment as $app) {
+                            $ret = $ret + $app['RETENATION'];
+                            $vat = $vat + $app['VAT'];
+                            $it = $it + $app['IT'];
                             ?>
                             <tr>
                                 <td style="text-align:center"><?= $i++; ?></td>
                                 <td style="text-align:center"><?= $app['MB_NO'] ?></td>
                                 <td style="text-align:center"><?= $app['MB_PG_NO'] ?></td>
                                 <td style="text-align:center"><?= $app['MB_DATE'] ?></td>
+                                <td style="text-align:center"><?= $app['RN_BILL_NAME'] ?></td>
                                 <td style="text-align:right"><?php
                                     $sum2 = $sum2 + $app['AMOUNT'];
                                     echo number_format($app['AMOUNT'])
                                     ?>.৳</td>
+                                
                                 <td style="text-align:center"><?php
                                     $percnt = ($app['AMOUNT'] / $this->appdata['WORK_VALUE']) * 100;
                                     $sum = $sum + $percnt;
                                     echo number_format($percnt) . "%";
                                     ?></td>
+                                <td style="text-align:right"><?= number_format($app['RETENATION']) ?>.৳</td>
+                                <td style="text-align:right"><?= number_format($app['VAT']) ?>.৳</td>
+                                <td style="text-align:right"><?= number_format($app['IT']) ?>.৳</td>
+                                <td style="text-align:right"><?php
+                                    $n_amt = $app['AMOUNT'] - $app['RETENATION'] - $app['VAT'] - $app['IT'];
+                                    $net = $net + $n_amt;
+                                    echo number_format($n_amt)
+                                    ?>.৳</td>
                                 <td style="text-align:center"><?php if ($app['STATUS'] == 'Y') { ?>
                                         <a style="color:green">PAID</a>
                                     <?php } else {
@@ -335,17 +380,22 @@
 
                             </tr>
                         <?php } ?>
-                        <tr><td style="text-align:right" colspan="4"><b>CUMULATIVE :</b></td>
-                            <td style="text-align:right"><?= number_format($sum2) ?>.৳</td>
-                            <td style="text-align:center"><?= number_format($sum) . "%" ?></td>
+                        <tr>
+                            <td style="text-align:right" colspan="5"><b>CUMULATIVE :</b></td>
+                            <td style="text-align:right"><b><?= number_format($sum2) ?>.৳</b></td>
+                            <td style="text-align:center"><b><?= number_format($sum) . "%" ?></b></td>
+                            <td style="text-align:right"><b><?= number_format($ret) . ".৳" ?></b></td>
+                            <td style="text-align:right"><b><?= number_format($vat) . ".৳" ?></b></td>
+                            <td style="text-align:right"><b><?= number_format($it) . ".৳" ?></b></td>
+                            <td style="text-align:right"><b><?= number_format($net) . ".৳" ?></b></td>
                             <td style="text-align:center"></td>
 
                         </tr>
 
-                        <tr><td style="text-align:right" colspan="4"><b>REMAINING :</b></td>
-                            <td style="text-align:right"><?= number_format($this->appdata['WORK_VALUE'] - $sum2) ?>.৳</td>
-                            <td style="text-align:center"><?= number_format(100 - $sum) . "%" ?></td>
-                            <td style="text-align:center"></td>
+                        <tr><td style="text-align:right" colspan="5"><b>REMAINING :</b></td>
+                            <td style="text-align:right"><b><?= number_format($this->appdata['WORK_VALUE'] - $sum2) ?>.৳</b></td>
+                            <td style="text-align:center"><b><?= number_format(100 - $sum) . "%" ?></b></td>
+                            <td colspan="5"></td>
 
                         </tr>
                     </tbody>
@@ -414,10 +464,24 @@
 //    });
 
 
+    function getrestrunningbill(bill_id) {
+        var link = "<?= $this->baseUrl() ?>/ajax/restrunningbill";
+        jQuery.ajax({
+            type: "POST",
+            url: link,
+            data: "bill_id=" + bill_id,
+            async: false,
+            success: function (msg) {
+                jQuery('#o_remaining_amt').html(msg);
+            }
+        });
+    }
+
+
     function checkvalue(amt) {
         var submit = true;
         var method = document.getElementById("method").value;
-        var total = document.getElementById("work_value").value;
+        var total = document.getElementById("remaining_amt").value;
         var due_amt = <?= $this->appdata['WORK_VALUE'] - $this->total_amt ?>;
         var due_prcnt = document.getElementById("due_prcnt").value;
         if (!method)

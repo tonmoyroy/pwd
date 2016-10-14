@@ -15,7 +15,7 @@
     <label class="control-label col-md-3 col-sm-3 col-xs-12">Branch <span class="required">*</span>
     </label>
     <div class="col-md-6 col-sm-6 col-xs-12">
-        <input name="p_branch" required="required" placeholder="Enter Branch Name" style="text-transform:uppercase" <?php if($this->paymentinfo){?>value="<?= $this->paymentinfo['BRANCH'] ?>"<?php }?> class="form-control col-md-7 col-xs-12">
+        <input name="p_branch" required="required" placeholder="Enter Branch Name" style="text-transform:uppercase" <?php if ($this->paymentinfo) { ?>value="<?= $this->paymentinfo['BRANCH'] ?>"<?php } ?> class="form-control col-md-7 col-xs-12">
     </div>
 </div>
 
@@ -24,7 +24,7 @@
         <label class="control-label col-md-3 col-sm-3 col-xs-12">Pay Order No. <span class="required">*</span>
         </label>
         <div class="col-md-6 col-sm-6 col-xs-12">
-            <input name="p_payorder" required="required" placeholder="Enter Pay Order No." style="text-transform:uppercase" <?php if($this->paymentinfo){?>value="<?= $this->paymentinfo['PAYORDER_NO'] ?>"<?php }?>  class="form-control col-md-7 col-xs-12">
+            <input name="p_payorder" required="required" placeholder="Enter Pay Order No." style="text-transform:uppercase" <?php if ($this->paymentinfo) { ?>value="<?= $this->paymentinfo['PAYORDER_NO'] ?>"<?php } ?>  class="form-control col-md-7 col-xs-12">
         </div>
     </div>
 
@@ -32,9 +32,11 @@
         <label class="control-label col-md-3 col-sm-3 col-xs-12">Pay Order Date <span class="required">*</span>
         </label>
         <div class="col-md-6 col-sm-6 col-xs-12">
-            <input id="birthday"  class="date-picker form-control col-md-7 col-xs-12" placeholder="Enter Pay Order Date" <?php if($this->paymentinfo){?>value="<?= $this->paymentinfo['PAY_DATE'] ?>"<?php }?>  name="p_date" required="required" type="text">
+            <input id="birthday"  class="date-picker form-control col-md-7 col-xs-12" placeholder="Enter Pay Order Date" <?php if ($this->paymentinfo) { ?>value="<?= $this->paymentinfo['PAY_DATE'] ?>"<?php } ?>  name="p_date" required="required" type="text">
         </div>
     </div>
+
+    <input type="hidden" name="p_issue_date" >
 <?php } ?>
 
 
@@ -43,7 +45,7 @@
         <label class="control-label col-md-3 col-sm-3 col-xs-12">Draft No. <span class="required">*</span>
         </label>
         <div class="col-md-6 col-sm-6 col-xs-12">
-            <input name="p_payorder" required="required" placeholder="Enter Draft No." style="text-transform:uppercase" <?php if($this->paymentinfo){?>value="<?= $this->paymentinfo['PAYORDER_NO'] ?>"<?php }?>  class="form-control col-md-7 col-xs-12">
+            <input name="p_payorder" required="required" placeholder="Enter Draft No." style="text-transform:uppercase" <?php if ($this->paymentinfo) { ?>value="<?= $this->paymentinfo['PAYORDER_NO'] ?>"<?php } ?>  class="form-control col-md-7 col-xs-12">
         </div>
     </div>
 
@@ -51,10 +53,11 @@
         <label class="control-label col-md-3 col-sm-3 col-xs-12">Bank Draft Date <span class="required">*</span>
         </label>
         <div class="col-md-6 col-sm-6 col-xs-12">
-            <input id="birthday"  class="date-picker form-control col-md-7 col-xs-12" placeholder="Enter Bank Draft Date" <?php if($this->paymentinfo){?>value="<?= $this->paymentinfo['PAY_DATE'] ?>"<?php }?>  name="p_date" required="required" type="text">
+            <input id="birthday"  class="date-picker form-control col-md-7 col-xs-12" placeholder="Enter Bank Draft Date" <?php if ($this->paymentinfo) { ?>value="<?= $this->paymentinfo['PAY_DATE'] ?>"<?php } ?>  name="p_date" required="required" type="text">
         </div>
     </div>
-
+    
+    <input type="hidden" name="p_issue_date" >
 <?php } ?>
 
 <?php if ($this->pay_method == 3) { ?>
@@ -62,7 +65,7 @@
         <label class="control-label col-md-3 col-sm-3 col-xs-12">Issue No. <span class="required">*</span>
         </label>
         <div class="col-md-6 col-sm-6 col-xs-12">
-            <input name="p_payorder" required="required" placeholder="Enter Guranteee Issue No." style="text-transform:uppercase" <?php if($this->paymentinfo){?>value="<?= $this->paymentinfo['PAYORDER_NO'] ?>"<?php }?>  class="form-control col-md-7 col-xs-12">
+            <input name="p_payorder" required="required" placeholder="Enter Guranteee Issue No." style="text-transform:uppercase" <?php if ($this->paymentinfo) { ?>value="<?= $this->paymentinfo['PAYORDER_NO'] ?>"<?php } ?>  class="form-control col-md-7 col-xs-12">
         </div>
     </div>
 
@@ -70,7 +73,15 @@
         <label class="control-label col-md-3 col-sm-3 col-xs-12">Validity Date <span class="required">*</span>
         </label>
         <div class="col-md-6 col-sm-6 col-xs-12">
-            <input id="birthday"  class="date-picker form-control col-md-7 col-xs-12" placeholder="Enter Validity Date" <?php if($this->paymentinfo){?>value="<?= $this->paymentinfo['PAY_DATE'] ?>"<?php }?>  name="p_date" required="required" type="text">
+            <input id="birthday"  class="date-picker form-control col-md-7 col-xs-12" placeholder="Enter Validity Date" <?php if ($this->paymentinfo) { ?>value="<?= $this->paymentinfo['PAY_DATE'] ?>"<?php } ?>  name="p_date" required="required" type="text">
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12">Issue Date <span class="required">*</span>
+        </label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <input id="birthday2"  class="date-picker form-control col-md-7 col-xs-12" placeholder="Enter Issue Date" <?php if ($this->paymentinfo) { ?>value="<?= $this->paymentinfo['ISSUE_DATE'] ?>"<?php } ?>  name="p_issue_date" required="required" type="text">
         </div>
     </div>
 <?php } ?>
@@ -80,7 +91,7 @@
     <label class="control-label col-md-3 col-sm-3 col-xs-12">Amount <span class="required">*</span>
     </label>
     <div class="col-md-6 col-sm-6 col-xs-12">
-        <input type="number" name="p_amount" required="required" placeholder="Enter Amount" onblur="cal_percentage(this.value)" <?php if($this->paymentinfo){?>value="<?= $this->paymentinfo['AMOUNT'] ?>"<?php }?>  class="form-control col-md-7 col-xs-12">
+        <input type="number" name="p_amount" required="required" placeholder="Enter Amount" onblur="cal_percentage(this.value)" <?php if ($this->paymentinfo) { ?>value="<?= $this->paymentinfo['AMOUNT'] ?>"<?php } ?>  class="form-control col-md-7 col-xs-12">
     </div>
 </div>
 
@@ -97,6 +108,13 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('#birthday').daterangepicker({
+            singleDatePicker: true,
+            calender_style: "picker_2"
+        }, function (start, end, label) {
+            console.log(start.toISOString(), end.toISOString(), label);
+        });
+        
+        $('#birthday2').daterangepicker({
             singleDatePicker: true,
             calender_style: "picker_2"
         }, function (start, end, label) {

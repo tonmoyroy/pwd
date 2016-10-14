@@ -17,13 +17,9 @@
                             <th >SL#</th>
                             <th style="text-align:center">CA NO.</th>
                             <th style="text-align:center">SECTOR</th>
-                            <th style="text-align:center">WORK NAME</th>
+                            <th style="text-align:center" >WORK NAME</th>
                             <th style="text-align:center">ESTIMATED COST</th>
                             <th style="text-align:center">APPROVED COST</th>
-                            <th style="text-align:center">PAYMENT SECURITY</th>
-                            <th style="text-align:center">PS DATE</th>
-                            <th style="text-align:center">PS AMOUNT</th>
-                            <th style="text-align:center">TOTAL BILL</th>
                             <th style="text-align:center">CONTRACTOR</th>
                         </tr>
                     </thead>
@@ -34,7 +30,7 @@
                         $i = 1;
                         foreach ($this->applist as $app) {
                             ?>
-                        <tr <?php if($app['STATUS']=='Y'){ ?>style="background-color: lime; color:black "<?php }?>>
+                            <tr>
                                 <td><?= $i++; ?></td>
                                 <td style="text-align:center"><?= $app['CA_NO'] ?></td>
                                 <td style="text-align:center"><?= $app['SECTOR_NAME'] ?></td>
@@ -47,10 +43,6 @@
                                 <?php }?>
                                 <td style="text-align:right"><?= number_format($app['EST_COST']) ?></td>
                                 <td style="text-align:right"><?= number_format($app['WORK_VALUE']) ?></td>
-                                <td style="text-align:center"><?= $app['PAYMENT_METHOD_NAME'] ?></td>
-                                <td style="text-align:center"><?= $app['PAY_DATE'] ?></td>
-                                <td style="text-align:right"><?= number_format($app['AMOUNT']) ?></td>
-                                <td style="text-align:right"><?= number_format($app['BILL_TOTAL']) ?></td>
                                 <td style="text-align:center"><a style="color: blue" href="showcontractor?no=<?= $app['CONTRACTOR_ID'] ?>"><?= $app['NAME'] ?></a></td>
                             </tr>
                         <?php } ?>

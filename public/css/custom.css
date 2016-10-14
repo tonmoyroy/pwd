@@ -2436,7 +2436,7 @@ input.parsley-error, textarea.parsley-error, select.parsley-error {
 
 /* *********  calender dropdown  **************************** */
 .daterangepicker{
-    z-index: 1050 !important;
+    z-index: 1151 !important;
 }
 
 .daterangepicker.dropdown-menu {

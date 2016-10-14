@@ -19,6 +19,7 @@ class Application_Model_Ajax extends Zend_Db_Table {
                 BRANCH,
                 PAYORDER_NO,
                 TO_CHAR (PAY_DATE, 'MM/DD/YYYY') PAY_DATE,
+                TO_CHAR (ISSUE_DATE, 'MM/DD/YYYY') ISSUE_DATE,
                 AMOUNT,
                 STATUS
            FROM PAYMENT
@@ -147,5 +148,35 @@ class Application_Model_Ajax extends Zend_Db_Table {
         //var_dump ($all_data);exit;
         return $all_data;
     }
-
+    
+    public function getKhatList(){
+        $sql = "SELECT KHAT_ID, KHAT_NAME, STATUS
+                FROM KHATS
+               WHERE STATUS = 'Y'";
+        $data = $this->_db->fetchAll($sql);
+        //echo $sql;exit;
+        return $data; 
+    }
+    
+    public function getInstalmentList($khat_id,$yr_id){
+        $sql = "SELECT INSTALMENT_ID, AMOUNT || ' [VALID-' || VALID_DATE || ']' AMOUNT
+                FROM INSTALMENT
+               WHERE KHAT_ID = $khat_id AND FISCAL_YR_ID = $yr_id AND STATUS = 'N'";
+        $data = $this->_db->fetchAll($sql);
+        //echo $sql;exit;
+        return $data; 
+    }
+    
+    public function getrestrunningbill($bill_id){
+        $sql = "SELECT X.AMOUNT - Y.AMOUNT REMAINING
+                FROM (SELECT NVL (RB.AMOUNT, 0) AMOUNT
+                        FROM RUNNING_BILL RB
+                       WHERE RB.RN_BILL_ID = $bill_id) X,
+                     (SELECT NVL (SUM (AMOUNT), 0) AMOUNT
+                        FROM BILL
+                       WHERE RN_BILL_ID = $bill_id) Y";
+        $data = $this->_db->fetchRow($sql);
+        //echo $sql;exit;
+        return $data; 
+    }
 }

@@ -1,0 +1,155 @@
+<div class="row" id="mycontainer">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div>
+
+                <div class="col-md-3 col-sm-3"></div>
+                <div class="col-md-6 col-sm-6 col-xs-12" style="padding-top: 30px">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>Contractor Information</h2>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">Contractor Name</th>
+                                        <td><?= $this->c_info['NAME'] ?></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Contractor Address</th>
+                                        <td><?= $this->c_info['ADDRESS'] ?></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Contractor Email</th>
+                                        <td><?= $this->c_info['EMAIL'] ?></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Contractor Mobile No.</th>
+                                        <td><?= $this->c_info['PHONE'] ?></td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-sm-12 col-xs-12" style="padding-top: 30px">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>List of Contract Awarded to <?= $this->c_info['NAME'] ?></h2>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+
+                        <table id="datatable" class="table table-striped table-bordered">
+                            <thead>
+                                <tr >
+                                    <th >SL#</th>
+                                    <th style="text-align:center">CA NO.</th>
+                                    <th style="text-align:center">WORK NAME</th>
+                                    <th style="text-align:center">ESTIMATED COST</th>
+                                    <th style="text-align:center">APPROVED COST</th>
+                                    <th style="text-align:center">PAYMENT SECURITY</th>
+                                    <th style="text-align:center">PS AMOUNT</th>
+                                    <th style="text-align:center">TOTAL BILLED</th>
+                                    <th style="text-align:center">RETENTION</th>
+                                    <th style="text-align:center">VAT</th>
+                                    <th style="text-align:center">IT</th>
+                                </tr>
+                            </thead>
+
+
+                            <tbody>
+                                <?php
+                                $amt = 0;
+                                $rete = 0;
+                                $vat = 0;
+                                $it = 0;
+                                $i = 1;
+                                $paid = 0;
+                                foreach ($this->contract_list as $ca_list) {
+                                    if($ca_list['TOTAL_RETE'] and $ca_list['TOTAL_VAT']) $paid = $paid + $ca_list['TOTAL'];
+                                    ?>
+                                    <tr >
+                                        <td><?= $i++; ?></td>
+                                        <td style="text-align:center"><?= $ca_list['CA_NO'] ?></td>
+                                        <td style="text-align:center"><?= $ca_list['CA_NAME'] ?></td>
+                                        <td style="text-align:right"><?= number_format($ca_list['EST_COST']) ?></td>
+                                        <td style="text-align:right"><?= number_format($ca_list['WORK_VALUE']) ?></td>
+                                        <td style="text-align:center"><?= $ca_list['PAYMENT_METHOD'] ?></td>
+                                        <td style="text-align:center"><?= number_format($ca_list['AMOUNT']) ?></td>
+                                        <td style="text-align:right"><?php $amt = $amt + $ca_list['TOTAL'];
+                                echo number_format($ca_list['TOTAL']) ?></td>
+                                        <td style="text-align:right"><?php $rete = $rete + $ca_list['TOTAL_RETE'];
+                                echo number_format($ca_list['TOTAL_RETE']) ?></td>
+                                        <td style="text-align:right"><?php $vat = $vat + $ca_list['TOTAL_VAT'];
+                                echo number_format($ca_list['TOTAL_VAT']) ?></td>
+                                        <td style="text-align:right"><?php $it = $it + $ca_list['TOTAL_IT'];
+                                echo number_format($ca_list['TOTAL_IT']) ?></td>
+                                    </tr>
+<?php } ?>
+
+                                <tr >
+                                    <td colspan="7" style="text-align: right"><b>Grand Total:</b></td>
+                                    <td style="text-align:right"><b><?= number_format($amt) ?></b></td>
+                                    <td style="text-align:right;color:#404 "><b><?= number_format($rete) ?></b></td>
+                                    <td style="text-align:right;color:#404"><b><?= number_format($vat) ?></b></td>
+                                    <td style="text-align:right;color:#404"><b><?= number_format($it) ?></b></td>
+                                </tr>
+                                
+                                <tr >
+                                    <td colspan="7" style="text-align: right"><b>Total Paid:</b></td>
+                                    <td colspan="4" style="text-align:center;color:green"><b><?= number_format($paid) ?></b></td>
+                                </tr>
+                                
+                                <tr >
+                                    <td colspan="7" style="text-align: right"><b>Total Remaining:</b></td>
+                                    <td colspan="4" style="text-align:center;color:red"><b><?= number_format($amt - $paid) ?></b></td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-sm-12" style="text-align: center">
+                    <a href="index" class="btn btn-primary">Back</a>
+                </div>
+                
+            </div>
+
+            
+
+
+        </div>
+
+
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#datatable').dataTable();
+        $('#datatable-keytable').DataTable({
+            keys: true
+        });
+        $('#datatable-responsive').DataTable();
+        $('#datatable-scroller').DataTable({
+            ajax: "js/datatables/json/scroller-demo.json",
+            deferRender: true,
+            scrollY: 380,
+            scrollCollapse: true,
+            scroller: true
+        });
+        var table = $('#datatable-fixed-header').DataTable({
+            fixedHeader: true
+        });
+    });
+    TableManageButtons.init();
+</script>

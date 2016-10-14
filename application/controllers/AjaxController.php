@@ -136,9 +136,24 @@ class AjaxController extends Zend_Controller_Action {
             //return $status['o_status_code'];
         }
     }
+    
+    public function instalmentlistAction(){
+        $this->_helper->layout->disableLayout();
+        
+        $khatid = $this->_request->getPost('khat_id');
+        $yearid = $this->_request->getPost('year_id');
+        
+        $this->view->instalmentlist =$l = $this->ajax->getInstalmentList($khatid,$yearid); //print_r($l);exit;
+    }
+    
+    
+    public function restrunningbillAction(){
+        $this->_helper->layout->disableLayout();
+        
+        $bill_id = $this->_request->getPost('bill_id');
+        
+        $this->view->remaining =$l = $this->ajax->getrestrunningbill($bill_id);
+    }
 
-//    public function ajaxfileuploadAction(){
-//        $this->_helper->layout->disableLayout();
-//        
-//    }
+
 }
