@@ -233,11 +233,14 @@
                             <th style="text-align:center">MB. DATE</th>
                             <th style="text-align:center">CHEQUE NO.</th>
                             <th style="text-align:center">VOUCHER NO.</th>
+                            <th style="text-align:center">BILL</th>
                             <th style="text-align:center">AMOUNT</th>
                             <th style="text-align:center" >PERCENTAGE</th>
                             <th style="text-align:center" >PAYMENT STATUS</th>
                             <th style="text-align:center" >RETENTION</th>
                             <th style="text-align:center" >VAT</th>
+                            <th style="text-align:center" >IT</th>
+                            <th style="text-align:center" >NET PAYABLE</th>
                             <th style="text-align:center" >ACTION</th>
                         </tr>
                     </thead>
@@ -248,6 +251,10 @@
                         $i = 1;
                         $sum = 0;
                         $sum2 = 0;
+                        $sum_net = 0;
+                        $sum_ret = 0;
+                        $sum_vat = 0;
+                        $sum_it = 0;
                         foreach ($this->allpayment as $app) {
                             ?>
                             <tr>
@@ -257,6 +264,7 @@
                                 <td style="text-align:center"><?= $app['MB_DATE'] ?></td>
                                 <td style="text-align:center"><?= $app['CHEQUE_NO'] ?></td>
                                 <td style="text-align:center"><?= $app['VOUCHER_NO'] ?></td>
+                                <td style="text-align:center"><?= $app['RN_BILL_NAME'] ?></td>
                                 <td style="text-align:right"><?php
                                     $sum2 = $sum2 + $app['AMOUNT'];
                                     echo number_format($app['AMOUNT'])
@@ -273,8 +281,23 @@
                                     <?php }
                                     ?>
                                 </td>
-                                <td style="text-align:center"><?= $app['RETENATION'] ?></td>
-                                <td style="text-align:center"><?= $app['VAT'] ?></td>
+                                <td style="text-align:right"><?php
+                                    $sum_ret = $sum_ret + $app['RETENATION'];
+                                    echo number_format($app['RETENATION']);
+                                    ?></td>
+                                <td style="text-align:right"><?php
+                                    $sum_vat = $sum_vat + $app['VAT'];
+                                    echo number_format($app['VAT']);
+                                    ?></td>
+                                <td style="text-align:right"><?php
+                                    $sum_it = $sum_it + $app['IT'];
+                                    echo number_format($app['IT']);
+                                    ?></td>
+                                <td style="text-align:right"><?php
+                                    $net = $app['AMOUNT'] - $app['RETENATION'] - $app['VAT'];
+                                    $sum_net = $sum_net + $net;
+                                    echo $net;
+                                    ?></td>
                                 <td>
                                     <?php if ($this->user_type == 4 and ! $app['MB_NO'] and $app['STATUS'] == 'N') { ?>
                                         <button type="button" class="btn btn-primary" data-toggle="modal" onclick="loadmodal(<?= $app['BILL_ID'] ?>)" data-target=".bs-example-modal-lg">Create Bill</button>                  
@@ -285,7 +308,7 @@
                                         <div id="o_newbill">
                                         </div>
 
-                                        <button type="button" class="btn btn-success " data-toggle="modal" onclick="finalizebill(<?= $app['BILL_ID'];?>, <?= $app['AMOUNT']?>)" data-target=".bs-example-modal-sm">Finalize Bill</button>                  
+                                        <button type="button" class="btn btn-success " data-toggle="modal" onclick="finalizebill(<?= $app['BILL_ID']; ?>, <?= $app['AMOUNT'] ?>)" data-target=".bs-example-modal-sm">Finalize Bill</button>                  
                                         <div id="o_finalizebill">
                                         </div>
                                     <?php } ?>
@@ -293,27 +316,47 @@
 
                             </tr>
                         <?php } ?>
-                        <tr><td style="text-align:right" colspan="6"><b>CUMULATIVE :</b></td>
+                        <tr><td style="text-align:right" colspan="7"><b>CUMULATIVE :</b></td>
                             <td style="text-align:right"><?= number_format($sum2) ?>.৳</td>
                             <td style="text-align:center"><?= number_format($sum) . "%" ?></td>
-                            <td colspan="6"></td>
+                            <td ></td>
+                            <td style="text-align:right"><?= number_format($sum_ret) ?></td>
+                            <td style="text-align:right"><?= number_format($sum_vat) ?></td>
+                            <td style="text-align:right"><?= number_format($sum_it) ?></td>
+                            <td style="text-align:right"><?= number_format($sum_net) ?></td>
+                            <td ></td>
 
                         </tr>
 
-                        <tr><td style="text-align:right" colspan="6"><b>REMAINING :</b></td>
+                        <tr><td style="text-align:right" colspan="7"><b>REMAINING :</b></td>
                             <td style="text-align:right"><?= number_format($this->appdata['WORK_VALUE'] - $sum2) ?>.৳</td>
                             <td style="text-align:center"><?= number_format(100 - $sum) . "%" ?></td>
-                            <td colspan="6"></td>
+                            <td colspan="8"></td>
 
                         </tr>
                     </tbody>
                 </table>
             </div>
+
+            <?php if ($this->appdata['STATUS'] == 'Y') { ?>
+                <div class="col-md-12" style="text-align: center">
+                    
+                    <?php if($this->appdata['RET_RELEASE'] == 'N'){?>
+                    <button type="button" class="btn btn-success" onclick="releaseretention()" data-toggle="modal" data-target=".bs-example-modal-lg">Release Retention Money</button>
+                    <div id = "o_retention"></div>
+                    <?php }else{?>
+                    <button type="button" class="btn btn-success" onclick="releaseinfo()" data-toggle="modal" data-target=".bs-example-modal-lg">Retention Release Information</button>
+                    <div id = "o_releaseinfo"></div>
+                    <?php }?>
+                    
+                    <a href="<?= $this->baseUrl() ?>/staff/index" class="btn btn-primary">Go Back</a> 
+                </div>
+            <?php } ?>
         </div>
     </div>
 
 
-    </div>
+</div>
 
 
 
@@ -340,8 +383,44 @@
         var table = $('#datatable-fixed-header').DataTable({
             fixedHeader: true
         });
+
     });
     TableManageButtons.init();
+
+    function releaseretention() {
+        var link = "<?= $this->baseUrl() ?>/ajax/releaseretention";
+        var ca_no = document.getElementById("ca_no").value;
+        
+        var work_value = <?= $this->appdata['WORK_VALUE']; ?>;
+        var net_pay = <?= $sum_net; ?>;
+        var ret_amt = <?= $sum_ret ?>;
+        jQuery.ajax({
+            type: "POST",
+            url: link,
+            data: "work_value=" + work_value + "&net_pay=" + net_pay + "&ret_amt=" + ret_amt + "&ca_no=" + ca_no,
+            async: false,
+            success: function (msg) {
+                jQuery('#o_retention').html(msg);
+            }
+        });
+        
+    }
+    
+    function releaseinfo(){
+        
+        var link = "<?= $this->baseUrl() ?>/ajax/releaseinfo";
+        var ca_no = document.getElementById("ca_no").value;
+        jQuery.ajax({
+            type: "POST",
+            url: link,
+            data: "ca_no=" + ca_no,
+            async: false,
+            success: function (msg) {
+                jQuery('#o_releaseinfo').html(msg);
+            }
+        });
+    }
+
 //    $('form').submit(function (e) {
 //        e.preventDefault();
 //        var submit = true;
@@ -371,7 +450,7 @@
 //    });
 
 
-
+    
 
     function number2text(value) {
         var fraction = Math.round(frac(value) * 100);
@@ -479,15 +558,15 @@
         });
     }
 
-    function finalizebill(bill_id,amount) {
+    function finalizebill(bill_id, amount) {
         var link = "<?= $this->baseUrl() ?>/ajax/finalizebill";
         var ca_no = document.getElementById("ca_no").value;
         var work_value = document.getElementById("work_value").value;
-        
+
         jQuery.ajax({
             type: "POST",
             url: link,
-            data: "bill_id=" + bill_id + "&ca_no=" + ca_no + "&work_value=" + work_value +"&amt=" + amount,
+            data: "bill_id=" + bill_id + "&ca_no=" + ca_no + "&work_value=" + work_value + "&amt=" + amount,
             async: false,
             success: function (msg) {
                 jQuery('#o_finalizebill').html(msg);

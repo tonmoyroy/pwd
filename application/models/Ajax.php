@@ -82,8 +82,6 @@ class Application_Model_Ajax extends Zend_Db_Table {
            :p_mb_no,
            :p_mb_pg_no,
            :p_date,
-           :p_cheque_no,
-           :p_voucher_no,
            :o_status_code,
            :o_status_message); END;", $all_data);
         //var_dump ($all_data);exit;
@@ -143,6 +141,8 @@ class Application_Model_Ajax extends Zend_Db_Table {
            :p_retention,
            :p_vat,
            :p_it,
+           :p_cheque_no,
+           :p_voucher_no,
            :o_status_code,
            :o_status_message); END;", $all_data);
         //var_dump ($all_data);exit;
@@ -175,6 +175,47 @@ class Application_Model_Ajax extends Zend_Db_Table {
                      (SELECT NVL (SUM (AMOUNT), 0) AMOUNT
                         FROM BILL
                        WHERE RN_BILL_ID = $bill_id) Y";
+        $data = $this->_db->fetchRow($sql);
+        //echo $sql;exit;
+        return $data; 
+    }
+    
+    public function releaseRetention($data){
+        $o_status_code = sprintf('%20f', '');
+        $o_status_message = sprintf('%4000s', '');
+        $out_parms = array(
+            "o_status_code" => &$o_status_code,
+            "o_status_message" => &$o_status_message
+        );
+
+        $all_data = array_merge($data, $out_parms);
+        //print_r($all_data);
+        
+        $stmt = new Zend_Db_Statement_Oracle($this->_db, "ALTER SESSION SET NLS_DATE_FORMAT='MM/DD/YYYY'");
+        $stmt->execute();
+        
+        $this->_db->query("BEGIN RELEASE_RETENTION_MONEY (
+           :p_ca_no,
+           :p_amount,
+           :p_cheque_no,
+           :p_voucher_no,
+           :p_date,
+           :o_status_code,
+           :o_status_message); END;", $all_data);
+        //var_dump ($all_data);exit;
+        return $all_data;
+    }
+    
+    
+    public function getReleaseInfo($ca_no){
+        $sql = "SELECT CA_NO,
+                AMOUNT,
+                CHEQUE_NO,
+                VOUCHER_NO,
+                C_DATE,
+                STATUS
+           FROM RELEASE_RETENTION
+          WHERE CA_NO = '$ca_no'";
         $data = $this->_db->fetchRow($sql);
         //echo $sql;exit;
         return $data; 

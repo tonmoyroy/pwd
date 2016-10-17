@@ -162,25 +162,15 @@ class StaffController extends Zend_Controller_Action {
                 }
                 $this->_redirect('Staff/divaccbill?no=' . $getdata['no']);
             }
+            
 
             $this->view->appdata = $this->staff->getAppData($getdata['no']);
             $this->view->paymentinfo = $payinfo = $this->staff->getPaymentInfo($getdata['no']);
             $this->view->allpayment = $payinfo = $this->staff->getBillPayment($getdata['no']);
 
-//            $postdata = $this->_request->getPost();
-//            if ($postdata) {
-//                print_r($postdata);
-//                exit;
-//
-//                if ($status['o_status_code'] == 1) {
-//                    $this->flashMessenger->addMessage(array('alert-success' => $status['o_status_message']));
-//                } else {
-//                    $this->flashMessenger->addMessage(array('alert-danger' => $status['o_status_message']));
-//                }
-//                $this->_redirect('Staff/billcontractagree?no=' . $postdata['p_ca_no']);
-//            }
         }
     }
+   
 
     public function divaccpaymentAction() {
         $this->view->user_type = $user_type = $this->PWDSession->session_data['user_type_id'];

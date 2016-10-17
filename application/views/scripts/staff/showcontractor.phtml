@@ -61,6 +61,7 @@
                                     <th style="text-align:center">RETENTION</th>
                                     <th style="text-align:center">VAT</th>
                                     <th style="text-align:center">IT</th>
+                                    <th style="text-align:center">NET PAYABLE</th>
                                 </tr>
                             </thead>
 
@@ -92,6 +93,8 @@
                                 echo number_format($ca_list['TOTAL_VAT']) ?></td>
                                         <td style="text-align:right"><?php $it = $it + $ca_list['TOTAL_IT'];
                                 echo number_format($ca_list['TOTAL_IT']) ?></td>
+                                        <td style="text-align:right"><?php $net = $ca_list['TOTAL'] - $ca_list['TOTAL_RETE'] - $ca_list['TOTAL_VAT'] - $ca_list['TOTAL_IT'];   
+                                echo number_format($net) ?></td>
                                     </tr>
 <?php } ?>
 
@@ -101,16 +104,22 @@
                                     <td style="text-align:right;color:#404 "><b><?= number_format($rete) ?></b></td>
                                     <td style="text-align:right;color:#404"><b><?= number_format($vat) ?></b></td>
                                     <td style="text-align:right;color:#404"><b><?= number_format($it) ?></b></td>
+                                    <td style="text-align:right;color:#404"><b><?= number_format($amt - $rete - $vat - $it) ?></b></td>
                                 </tr>
                                 
                                 <tr >
                                     <td colspan="7" style="text-align: right"><b>Total Paid:</b></td>
-                                    <td colspan="4" style="text-align:center;color:green"><b><?= number_format($paid) ?></b></td>
+                                    <td colspan="5" style="text-align:center;color:green"><b><?= number_format($paid) ?></b></td>
                                 </tr>
                                 
                                 <tr >
                                     <td colspan="7" style="text-align: right"><b>Total Remaining:</b></td>
-                                    <td colspan="4" style="text-align:center;color:red"><b><?= number_format($amt - $paid) ?></b></td>
+                                    <td colspan="5" style="text-align:center;color:red"><b><?= number_format($amt - $paid) ?></b></td>
+                                </tr>
+                                
+                                <tr >
+                                    <td colspan="7" style="text-align: right"><b>Total NET Paid:</b></td>
+                                    <td colspan="5" style="text-align:center;color:green"><b><?= number_format($paid - $rete - $vat - $it) ?></b></td>
                                 </tr>
 
                             </tbody>

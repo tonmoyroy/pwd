@@ -115,18 +115,18 @@ class AjaxController extends Zend_Controller_Action {
         $this->_helper->layout->disableLayout();
         $this->view->bill_id = $bill_id = $this->_request->getPost('bill_id');
         $this->view->work_value = $work_value = $this->_request->getPost('work_value');
-        $this->view->ex_amt =  $this->_request->getPost('amt');
+        $this->view->ex_amt = $this->_request->getPost('amt');
         $this->view->ca_no = $this->_request->getPost('ca_no'); //print_r($ca_no);exit;
         $this->view->rate_chart = $this->ajax->getRateChart();
 
         if ($this->_request->getPost('submit')) {
             $postdata = $this->_request->getPost();
-            
+
             $ca_no = $postdata['ca_no'];
             unset($postdata['submit']);
             unset($postdata['ca_no']);
             $status = $this->ajax->finalizeBill($postdata);
-            
+
             if ($status['o_status_code'] == 1) {
                 $this->flashMessenger->addMessage(array('alert-success' => $status['o_status_message']));
             } else {
@@ -136,24 +136,51 @@ class AjaxController extends Zend_Controller_Action {
             //return $status['o_status_code'];
         }
     }
-    
-    public function instalmentlistAction(){
+
+    public function instalmentlistAction() {
         $this->_helper->layout->disableLayout();
-        
+
         $khatid = $this->_request->getPost('khat_id');
         $yearid = $this->_request->getPost('year_id');
-        
-        $this->view->instalmentlist =$l = $this->ajax->getInstalmentList($khatid,$yearid); //print_r($l);exit;
-    }
-    
-    
-    public function restrunningbillAction(){
-        $this->_helper->layout->disableLayout();
-        
-        $bill_id = $this->_request->getPost('bill_id');
-        
-        $this->view->remaining =$l = $this->ajax->getrestrunningbill($bill_id);
+
+        $this->view->instalmentlist = $l = $this->ajax->getInstalmentList($khatid, $yearid); //print_r($l);exit;
     }
 
+    public function restrunningbillAction() {
+        $this->_helper->layout->disableLayout();
+
+        $bill_id = $this->_request->getPost('bill_id');
+
+        $this->view->remaining = $l = $this->ajax->getrestrunningbill($bill_id);
+    }
+
+    public function releaseretentionAction() {
+        $this->_helper->layout->disableLayout();
+
+        $this->view->work_value = $work_value = $this->_request->getPost('work_value');
+        $this->view->net_pay = $net_pay = $this->_request->getPost('net_pay');
+        $this->view->ret_amt = $ret_amt = $this->_request->getPost('ret_amt');
+        $this->view->ca_no = $ca_no = $this->_request->getPost('ca_no');//echo $ca_no;exit;
+
+        if ($this->_request->getPost('submit')) {
+            $postdata = $this->_request->getPost();//print_r($postdata);exit;
+            unset($postdata['submit']);
+            $status = $this->ajax->releaseRetention($postdata);
+            
+
+            if ($status['o_status_code'] == 1) {
+                $this->flashMessenger->addMessage(array('alert-success' => $status['o_status_message']));
+            } else {
+                $this->flashMessenger->addMessage(array('alert-danger' => $status['o_status_message']));
+            }
+            $this->_redirect('Staff/divaccbill?no=' . $postdata['p_ca_no']);
+        }
+    }
+    
+    public function releaseinfoAction(){
+        $this->_helper->layout->disableLayout();
+        $ca_no = $this->_request->getPost('ca_no');
+        $this->view->releaseInfo = $l = $this->ajax->getReleaseInfo($ca_no);
+    }
 
 }

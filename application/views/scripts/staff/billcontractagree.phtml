@@ -322,7 +322,7 @@
                             <th style="text-align:center">DATE</th>
                             <th style="text-align:center" >BILL</th>
                             <th style="text-align:center">AMOUNT</th>
-                            
+
                             <th style="text-align:center" >PERCENTAGE</th>
                             <th style="text-align:center" >RETENTION</th>
                             <th style="text-align:center" >VAT</th>
@@ -357,7 +357,7 @@
                                     $sum2 = $sum2 + $app['AMOUNT'];
                                     echo number_format($app['AMOUNT'])
                                     ?>.৳</td>
-                                
+
                                 <td style="text-align:center"><?php
                                     $percnt = ($app['AMOUNT'] / $this->appdata['WORK_VALUE']) * 100;
                                     $sum = $sum + $percnt;
@@ -401,6 +401,18 @@
                     </tbody>
                 </table>
             </div>
+
+            <?php if ($this->appdata['STATUS'] == 'Y') { ?>
+                <div class="col-md-12" style="text-align: center">
+
+                    <?php if ($this->appdata['RET_RELEASE'] == 'Y') { ?>
+                        <button type="button" class="btn btn-success" onclick="releaseinfo()" data-toggle="modal" data-target=".bs-example-modal-lg">Retention Release Information</button>
+                        <div id = "o_releaseinfo"></div>  
+                    <?php } ?>
+
+                    <a href="<?= $this->baseUrl() ?>/staff/index" class="btn btn-primary">Go Back</a> 
+                </div>
+            <?php } ?>
         </div>
     </div>
 
@@ -434,6 +446,21 @@
     });
     TableManageButtons.init();
 
+
+    function releaseinfo() {
+
+        var link = "<?= $this->baseUrl() ?>/ajax/releaseinfo";
+        var ca_no = document.getElementById("ca_no").value;
+        jQuery.ajax({
+            type: "POST",
+            url: link,
+            data: "ca_no=" + ca_no,
+            async: false,
+            success: function (msg) {
+                jQuery('#o_releaseinfo').html(msg);
+            }
+        });
+    }
 
 //    $('form').submit(function (e) {
 //        e.preventDefault();

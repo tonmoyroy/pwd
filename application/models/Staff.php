@@ -259,7 +259,7 @@ class Application_Model_Staff extends Zend_Db_Table {
                 AND CA.CA_NO = P.CA_NO
                 AND P.PAYMENT_METHOD = PM.PAYMENT_METHOD_ID
                 AND BT.CA_NO(+) = CA.CA_NO
-                AND P.STATUS = 'Y'";
+                AND P.STATUS = 'Y' ORDER BY CA.CA_NO,CA.SIGN_DATE";
 
         //echo $sql;exit;
         $data = $this->_db->fetchAll($sql);
@@ -312,6 +312,7 @@ class Application_Model_Staff extends Zend_Db_Table {
                 CA.CREATE_DATE,
                 CA.FORWARD_BY,
                 CA.STATUS,
+                CA.RET_RELEASE,
                 CA.KHAT_ID
            FROM CONTRACT_AGREEMENT CA,
                 L_SECTOR S,
@@ -332,6 +333,7 @@ class Application_Model_Staff extends Zend_Db_Table {
         //print_r($data);exit;
         return $data;
     }
+
 
     public function getPayementMethod() {
         $sql = "SELECT PAYMENT_METHOD_ID, PAYMENT_METHOD, ACTIVE_YN
