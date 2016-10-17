@@ -1,3 +1,128 @@
+<!--<div id="mycontainer"  class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12" >
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>List of Contract Agreement - Financial Year: <?= $this->year['START_YEAR']; ?>-<?= $this->year['END_YEAR']; ?> </h2>
+                <ul class="nav navbar-right panel_toolbox">
+<?php if ($this->user_type == 3) { ?><li><b><a href="createcontractagree"><i class="fa fa-plus "></i> Add New CA</a></b>
+                            </li><?php } ?>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+
+                <table id="datatable" class="table table-striped table-bordered">
+                    <thead>
+                        <tr >
+                            <th >SL#</th>
+                            <th style="text-align:center">CA NO.</th>
+                            <th style="text-align:center">SECTOR</th>
+                            <th style="text-align:center" >WORK NAME</th>
+                            <th style="text-align:center">APPROVED COST</th>
+                            <th style="text-align:center">WORK ORDER VALUE</th>
+                            <th style="text-align:center">CONTRACTOR</th>
+                        </tr>
+                    </thead>
+
+
+                    <tbody>
+<?php
+$i = 1;
+foreach ($this->applist as $app) {
+    ?>
+                                <tr>
+                                    <td><?= $i++; ?></td>
+                                    <td style="text-align:center"><?= $app['CA_NO'] ?></td>
+                                    <td style="text-align:center"><?= $app['SECTOR_NAME'] ?></td>
+    <?php if ($this->user_type == 2) { ?>
+                                            <td style="text-align:center"><a style="color: blue" href="billcontractagree?no=<?= $app['CA_NO'] ?>"><?= $app['CA_NAME'] ?></a></td>
+    <?php } elseif ($this->user_type == 3) { ?>
+                                            <td style="text-align:center"><a style="color: blue" href="showcontractagree?no=<?= $app['CA_NO'] ?>"><?= $app['CA_NAME'] ?></a></td>
+    <?php } elseif ($this->user_type == 4) { ?>
+                                            <td style="text-align:center"><a style="color: blue" href="divaccbill?no=<?= $app['CA_NO'] ?>"><?= $app['CA_NAME'] ?></a></td>
+    <?php } ?>
+                                    <td style="text-align:right"><?= number_format($app['EST_COST']) ?></td>
+                                    <td style="text-align:right"><?= number_format($app['WORK_VALUE']) ?></td>
+                                    <td style="text-align:center"><a style="color: blue" href="showcontractor?no=<?= $app['CONTRACTOR_ID'] ?>"><?= $app['NAME'] ?></a></td>
+                                </tr>
+<?php } ?>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#datatable').dataTable();
+        $('#datatable-keytable').DataTable({
+            keys: true
+        });
+        $('#datatable-responsive').DataTable();
+        $('#datatable-scroller').DataTable({
+            ajax: "js/datatables/json/scroller-demo.json",
+            deferRender: true,
+            scrollY: 380,
+            scrollCollapse: true,
+            scroller: true
+        });
+        var table = $('#datatable-fixed-header').DataTable({
+            fixedHeader: true
+        });
+    });
+    TableManageButtons.init();
+</script>-->
+
+
+<style type="text/css">
+    #blinkeffect {
+        font-weight: bold;
+        -webkit-animation-name: blink;
+        -webkit-animation-duration: 1s;
+        -webkit-animation-timing-function: linear;
+        -webkit-animation-iteration-count: infinite;
+
+        -moz-animation-name: blink;
+        -moz-animation-duration: 1s;
+        -moz-animation-timing-function: linear;
+        -moz-animation-iteration-count: infinite;
+
+        animation-name: blink;
+        animation-duration: 1s;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+    }
+
+    @-moz-keyframes blink {  
+        0% { opacity: 1.0; color: blue; }
+        50% { opacity: 0.0; }
+        100% { opacity: 1.0; color: red; }
+    }
+
+    @-webkit-keyframes blink {  
+        0% { opacity: 1.0; color: blue;}
+        50% { opacity: 0.0; }
+        100% { opacity: 1.0; color: red; }
+    }
+
+    @keyframes blink {  
+        0% { opacity: 1.0; color: blue; }
+        50% { opacity: 0.0; }
+        100% { opacity: 1.0; color: red; }
+    }
+</style>
+
+<script type="text/javascript">
+    function blink() {
+        $('#blinkeffect').fadeOut(1500).fadeIn(1500);
+    }
+    setInterval(blink, 50000000);
+</script>
+
+
 <div id="mycontainer"  class="row">
     <div class="col-md-12 col-sm-12 col-xs-12" >
         <div class="x_panel">
@@ -17,9 +142,12 @@
                             <th >SL#</th>
                             <th style="text-align:center">CA NO.</th>
                             <th style="text-align:center">SECTOR</th>
-                            <th style="text-align:center" >WORK NAME</th>
-                            <th style="text-align:center">ESTIMATED COST</th>
+                            <th style="text-align:center">WORK NAME</th>
                             <th style="text-align:center">APPROVED COST</th>
+                            <th style="text-align:center">WORK ORDER VALUE</th>
+                            <th style="text-align:center">PAYMENT SECURITY</th>
+                            <th style="text-align:center">PS EXPIRY</th>
+                            <th style="text-align:center">PS AMOUNT</th>
                             <th style="text-align:center">CONTRACTOR</th>
                         </tr>
                     </thead>
@@ -30,22 +158,26 @@
                         $i = 1;
                         foreach ($this->applist as $app) {
                             ?>
-                            <tr>
+                            <tr <?php if ($app['STATUS'] == 'Y') { ?>style="background-color: lime; color:black "<?php } ?>>
                                 <td><?= $i++; ?></td>
                                 <td style="text-align:center"><?= $app['CA_NO'] ?></td>
                                 <td style="text-align:center"><?= $app['SECTOR_NAME'] ?></td>
                                 <?php if ($this->user_type == 2) { ?>
                                     <td style="text-align:center"><a style="color: blue" href="billcontractagree?no=<?= $app['CA_NO'] ?>"><?= $app['CA_NAME'] ?></a></td>
-                                <?php } elseif($this->user_type == 3) { ?>
+                                <?php } elseif ($this->user_type == 3) { ?>
                                     <td style="text-align:center"><a style="color: blue" href="showcontractagree?no=<?= $app['CA_NO'] ?>"><?= $app['CA_NAME'] ?></a></td>
-                                <?php } elseif($this->user_type == 4) {?>
+                                <?php } elseif ($this->user_type == 4) { ?>
                                     <td style="text-align:center"><a style="color: blue" href="divaccbill?no=<?= $app['CA_NO'] ?>"><?= $app['CA_NAME'] ?></a></td>
-                                <?php }?>
+                                <?php } ?>
                                 <td style="text-align:right"><?= number_format($app['EST_COST']) ?></td>
                                 <td style="text-align:right"><?= number_format($app['WORK_VALUE']) ?></td>
+                                <td style="text-align:center"><?= $app['PAYMENT_METHOD_NAME'] ?></td>
+                                <td style="text-align:center"><?php $tdiff = (strtotime($app['PAY_DATE']) - strtotime($this->today['SYSDATE'])) / (60 * 60 * 24);
+                            if ($tdiff <= 7) { ?> <a id="blinkeffect"><?= $app['PAY_DATE'] ?></a><?php } else echo $app['PAY_DATE'] ?></td>
+                                <td style="text-align:right"><?= number_format($app['AMOUNT']) ?></td>
                                 <td style="text-align:center"><a style="color: blue" href="showcontractor?no=<?= $app['CONTRACTOR_ID'] ?>"><?= $app['NAME'] ?></a></td>
                             </tr>
-                        <?php } ?>
+<?php } ?>
 
                     </tbody>
                 </table>
@@ -75,6 +207,12 @@
     });
     TableManageButtons.init();
 </script>
+
+
+
+
+
+
 
 
 

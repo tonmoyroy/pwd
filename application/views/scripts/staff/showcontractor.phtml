@@ -74,8 +74,10 @@
                                 $it = 0;
                                 $i = 1;
                                 $paid = 0;
+                                $ret_rel = 0;
                                 foreach ($this->contract_list as $ca_list) {
                                     if($ca_list['TOTAL_RETE'] and $ca_list['TOTAL_VAT']) $paid = $paid + $ca_list['TOTAL'];
+                                    if($ca_list['RET_RELEASE']=='Y') $ret_rel = $ret_rel + $ca_list['TOTAL_RETE'];
                                     ?>
                                     <tr >
                                         <td><?= $i++; ?></td>
@@ -87,7 +89,7 @@
                                         <td style="text-align:center"><?= number_format($ca_list['AMOUNT']) ?></td>
                                         <td style="text-align:right"><?php $amt = $amt + $ca_list['TOTAL'];
                                 echo number_format($ca_list['TOTAL']) ?></td>
-                                        <td style="text-align:right"><?php $rete = $rete + $ca_list['TOTAL_RETE'];
+                                        <td <?php if($ca_list['RET_RELEASE']=='Y'){?> style="text-align: right; font-weight: bold; color:green" <?php }else {?> style="text-align:right"<?php }?>><?php $rete = $rete + $ca_list['TOTAL_RETE'];
                                 echo number_format($ca_list['TOTAL_RETE']) ?></td>
                                         <td style="text-align:right"><?php $vat = $vat + $ca_list['TOTAL_VAT'];
                                 echo number_format($ca_list['TOTAL_VAT']) ?></td>
@@ -108,6 +110,11 @@
                                 </tr>
                                 
                                 <tr >
+                                    <td colspan="7" style="text-align: right"><b>Total Retention Release:</b></td>
+                                    <td colspan="5" style="text-align:center;color:green"><b><?= number_format($ret_rel) ?></b></td>
+                                </tr>
+                                
+                                <tr >
                                     <td colspan="7" style="text-align: right"><b>Total Paid:</b></td>
                                     <td colspan="5" style="text-align:center;color:green"><b><?= number_format($paid) ?></b></td>
                                 </tr>
@@ -118,8 +125,8 @@
                                 </tr>
                                 
                                 <tr >
-                                    <td colspan="7" style="text-align: right"><b>Total NET Paid:</b></td>
-                                    <td colspan="5" style="text-align:center;color:green"><b><?= number_format($paid - $rete - $vat - $it) ?></b></td>
+                                    <td colspan="7" style="text-align: right"><b>Total NET Paid (Total Net Payable+Total RET. Release):</b></td>
+                                    <td colspan="5" style="text-align:center;color:green"><b><?= number_format($paid - $rete - $vat - $it + $ret_rel) ?></b></td>
                                 </tr>
 
                             </tbody>

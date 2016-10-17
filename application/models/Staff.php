@@ -109,6 +109,7 @@ class Application_Model_Staff extends Zend_Db_Table {
            :p_work_value,
            :p_contractor_id,
            :p_sign_date,
+           :p_complete_date,
            :p_user_id,
            :o_status_code,
            :o_status_message); END;", $all_data);
@@ -118,67 +119,54 @@ class Application_Model_Staff extends Zend_Db_Table {
     }
 
     public function getAppList($id, $user_type, $status) {
-//        $sql = "SELECT CA.CA_NO,
-//                CA.CA_NAME,
-//                CA.SECTOR_ID,
-//                S.SECTOR_NAME,
-//                CA.SUB_DIV_ID,
-//                CA.EST_COST,
-//                CA.AUTH_ID,
-//                CA.PROC_TYPE_ID,
-//                CA.PROC_METH_ID,
-//                CA.WORK_VALUE,
-//                CA.CONTRACTOR_ID,
-//                C.NAME,
-//                CA.SIGN_DATE,
-//                CA.CREATE_DATE
-//           FROM CONTRACT_AGREEMENT CA,
-//                (SELECT START_DATE, END_DATE
-//                   FROM L_FISCAL_YEAR
-//                  WHERE FISCAL_YR_ID = $id) FISCAL_YR,
-//                L_SECTOR S,
-//                CONTRACTOR C
-//          WHERE     CA.CREATE_DATE BETWEEN FISCAL_YR.START_DATE AND FISCAL_YR.END_DATE
-//                AND CA.SECTOR_ID = S.SECTOR_ID
-//                AND CA.CONTRACTOR_ID = C.CONTRACTOR_ID ORDER BY CA.CA_NO";
-
+        
         $sql = "SELECT *
-  FROM (  SELECT CA.CA_NO,
-                 CA.CA_NAME,
-                 CA.SECTOR_ID,
-                 S.SECTOR_NAME,
-                 CA.SUB_DIV_ID,
-                 CA.EST_COST,
-                 CA.AUTH_ID,
-                 CA.PROC_TYPE_ID,
-                 CA.PROC_METH_ID,
-                 CA.WORK_VALUE,
-                 CA.CONTRACTOR_ID,
-                 C.NAME,
-                 CA.SIGN_DATE,
-                 CA.CREATE_DATE,
-                 CURR_STAGE.STAGE,
-                 LW.USER_TYPE
-            FROM CONTRACT_AGREEMENT CA,
-                 (SELECT START_DATE, END_DATE
-                    FROM L_FISCAL_YEAR
-                   WHERE FISCAL_YR_ID = 1) FISCAL_YR,
-                 (  SELECT MIN (STAGE) STAGE, CA_NO
-                      FROM WORKFLOW W
-                     WHERE STATUS = 'N'
-                  GROUP BY CA_NO) CURR_STAGE,
-                 L_SECTOR S,
-                 CONTRACTOR C,
-                 L_WORKFLOW LW
-           WHERE     CA.CREATE_DATE BETWEEN FISCAL_YR.START_DATE
-                                        AND FISCAL_YR.END_DATE
-                 AND CA.STATUS = '$status'
-                 AND CA.SECTOR_ID = S.SECTOR_ID
-                 AND CA.CONTRACTOR_ID = C.CONTRACTOR_ID
-                 AND CA.CA_NO = CURR_STAGE.CA_NO
-                 AND LW.STAGE_ID = CURR_STAGE.STAGE
-        ORDER BY CA.CA_NO) TAB
- WHERE TAB.USER_TYPE = $user_type";
+                FROM (  SELECT CA.CA_NO,
+                               CA.CA_NAME,
+                               CA.SECTOR_ID,
+                               S.SECTOR_NAME,
+                               CA.SUB_DIV_ID,
+                               CA.EST_COST,
+                               CA.AUTH_ID,
+                               CA.PROC_TYPE_ID,
+                               CA.PROC_METH_ID,
+                               CA.WORK_VALUE,
+                               CA.CONTRACTOR_ID,
+                               C.NAME,
+                               CA.SIGN_DATE,
+                               CA.CREATE_DATE,
+                               CURR_STAGE.STAGE,
+                               LW.USER_TYPE,
+                               P.PAYMENT_ID,
+                               P.PAYMENT_METHOD,
+                               PM.PAYMENT_METHOD PAYMENT_METHOD_NAME,
+                               P.PAY_DATE,
+                               P.AMOUNT
+                          FROM CONTRACT_AGREEMENT CA,
+                               (SELECT START_DATE, END_DATE
+                                  FROM L_FISCAL_YEAR
+                                 WHERE FISCAL_YR_ID = 1) FISCAL_YR,
+                               (  SELECT MIN (STAGE) STAGE, CA_NO
+                                    FROM WORKFLOW W
+                                   WHERE STATUS = 'N'
+                                GROUP BY CA_NO) CURR_STAGE,
+                               L_SECTOR S,
+                               PAYMENT P,
+                               L_PAYMENT_METHOD PM,
+                               CONTRACTOR C,
+                               L_WORKFLOW LW
+                         WHERE     CA.CREATE_DATE BETWEEN FISCAL_YR.START_DATE
+                                                      AND FISCAL_YR.END_DATE
+                               AND CA.STATUS = '$status'
+                               AND CA.SECTOR_ID = S.SECTOR_ID
+                               AND CA.CONTRACTOR_ID = C.CONTRACTOR_ID
+                               AND CA.CA_NO = P.CA_NO
+                               AND P.PAYMENT_METHOD = PM.PAYMENT_METHOD_ID
+                               AND CA.CA_NO = CURR_STAGE.CA_NO
+                               AND LW.STAGE_ID = CURR_STAGE.STAGE
+                      ORDER BY CA.CA_NO) TAB
+               WHERE TAB.USER_TYPE = $user_type";
+        
         //echo $sql;exit;
         $data = $this->_db->fetchAll($sql);
         //print_r($data);exit;
@@ -309,6 +297,7 @@ class Application_Model_Staff extends Zend_Db_Table {
                 CA.CONTRACTOR_ID,
                 C.NAME,
                 CA.SIGN_DATE,
+                CA.COMPLETE_DATE,
                 CA.CREATE_DATE,
                 CA.FORWARD_BY,
                 CA.STATUS,
@@ -331,6 +320,12 @@ class Application_Model_Staff extends Zend_Db_Table {
        ORDER BY CA.CA_NO";
         $data = $this->_db->fetchRow($sql);
         //print_r($data);exit;
+        return $data;
+    }
+    
+    public function getCurrentDate(){
+        $sql = "SELECT SYSDATE FROM DUAL";
+        $data = $this->_db->fetchRow($sql);
         return $data;
     }
 
@@ -514,6 +509,7 @@ class Application_Model_Staff extends Zend_Db_Table {
                 CA.WORK_VALUE,
                 CA.SIGN_DATE,
                 CA.STATUS,
+                CA.RET_RELEASE,
                 PM.PAYMENT_METHOD,
                 P.AMOUNT,
                 P.PAY_DATE,
@@ -544,6 +540,8 @@ class Application_Model_Staff extends Zend_Db_Table {
         $data = $this->_db->fetchAll($sql);
         return $data;
     }
+    
+    
 
     public function getFundStatus() {
         $sql = "SELECT EXTRACT (YEAR FROM START_DATE) START_YEAR,

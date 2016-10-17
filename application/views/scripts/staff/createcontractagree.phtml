@@ -191,6 +191,14 @@
                             <input id="birthday"  class="date-picker form-control col-md-7 col-xs-12" placeholder="Enter Sign Date" name="p_sign_date" required="required" type="text">
                         </div>
                     </div>
+                    
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Completion Date <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="complete_date"  class="date-picker form-control col-md-7 col-xs-12" placeholder="Enter Completion Date" name="p_complete_date" required="required" type="text">
+                        </div>
+                    </div>
 
                     <div class="ln_solid"></div>
                     <div class="form-group">
@@ -209,6 +217,13 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('#birthday').daterangepicker({
+            singleDatePicker: true,
+            calender_style: "picker_2"
+        }, function (start, end, label) {
+            console.log(start.toISOString(), end.toISOString(), label);
+        });
+        
+        $('#complete_date').daterangepicker({
             singleDatePicker: true,
             calender_style: "picker_2"
         }, function (start, end, label) {

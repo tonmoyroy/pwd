@@ -64,6 +64,8 @@ class StaffController extends Zend_Controller_Action {
         $getdata = $this->_request->getQuery();
         $this->view->user_type = $user_type = $this->PWDSession->session_data['user_type_id'];
         $this->view->applist = $this->staff->getAppList($getdata['id'], $user_type, 'N');
+        $this->view->today = $today = $this->staff->getCurrentDate();
+        //$this->view->applist = $this->staff->getExecutiveAppList($getdata['id'], $user_type);
         $this->view->year = $this->staff->getFiscalYear($getdata['id']);
     }
 
@@ -84,6 +86,7 @@ class StaffController extends Zend_Controller_Action {
     public function exapplistAction() {
         $getdata = $this->_request->getQuery();
         $this->view->user_type = $user_type = $this->PWDSession->session_data['user_type_id'];
+        $this->view->today = $today = $this->staff->getCurrentDate();
         $this->view->applist = $this->staff->getExecutiveAppList($getdata['id'], $user_type);
         $this->view->year = $this->staff->getFiscalYear($getdata['id']);
     }

@@ -1,3 +1,49 @@
+<style type="text/css">
+#blinkeffect {
+    font-weight: bold;
+    -webkit-animation-name: blink;
+    -webkit-animation-duration: 1s;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+
+    -moz-animation-name: blink;
+    -moz-animation-duration: 1s;
+    -moz-animation-timing-function: linear;
+    -moz-animation-iteration-count: infinite;
+
+    animation-name: blink;
+    animation-duration: 1s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+@-moz-keyframes blink {  
+    0% { opacity: 1.0; color: blue; }
+    50% { opacity: 0.0; }
+    100% { opacity: 1.0; color: red; }
+}
+
+@-webkit-keyframes blink {  
+    0% { opacity: 1.0; color: blue;}
+    50% { opacity: 0.0; }
+    100% { opacity: 1.0; color: red; }
+}
+
+@keyframes blink {  
+    0% { opacity: 1.0; color: blue; }
+    50% { opacity: 0.0; }
+    100% { opacity: 1.0; color: red; }
+}
+</style>
+
+<script type="text/javascript">
+function blink() {
+    $('#blinkeffect').fadeOut(1500).fadeIn(1500);
+}
+setInterval(blink, 50000000); 
+</script>
+
+
 <div id="mycontainer"  class="row">
     <div class="col-md-12 col-sm-12 col-xs-12" >
         <div class="x_panel">
@@ -18,10 +64,10 @@
                             <th style="text-align:center">CA NO.</th>
                             <th style="text-align:center">SECTOR</th>
                             <th style="text-align:center">WORK NAME</th>
-                            <th style="text-align:center">ESTIMATED COST</th>
                             <th style="text-align:center">APPROVED COST</th>
+                            <th style="text-align:center">WORK ORDER VALUE</th>
                             <th style="text-align:center">PAYMENT SECURITY</th>
-                            <th style="text-align:center">PS DATE</th>
+                            <th style="text-align:center">PS EXPIRY</th>
                             <th style="text-align:center">PS AMOUNT</th>
                             <th style="text-align:center">TOTAL BILL</th>
                             <th style="text-align:center">CONTRACTOR</th>
@@ -48,7 +94,7 @@
                                 <td style="text-align:right"><?= number_format($app['EST_COST']) ?></td>
                                 <td style="text-align:right"><?= number_format($app['WORK_VALUE']) ?></td>
                                 <td style="text-align:center"><?= $app['PAYMENT_METHOD_NAME'] ?></td>
-                                <td style="text-align:center"><?= $app['PAY_DATE'] ?></td>
+                                <td style="text-align:center"><?php $tdiff = (strtotime($app['PAY_DATE']) - strtotime($this->today['SYSDATE']))/(60 * 60 * 24); if($tdiff<=7){?> <a id="blinkeffect"><?= $app['PAY_DATE']?></a><?php }else echo $app['PAY_DATE']?></td>
                                 <td style="text-align:right"><?= number_format($app['AMOUNT']) ?></td>
                                 <td style="text-align:right"><?= number_format($app['BILL_TOTAL']) ?></td>
                                 <td style="text-align:center"><a style="color: blue" href="showcontractor?no=<?= $app['CONTRACTOR_ID'] ?>"><?= $app['NAME'] ?></a></td>
